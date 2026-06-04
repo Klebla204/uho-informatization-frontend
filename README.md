@@ -1,33 +1,65 @@
- # Development System for an Informatization Process for the University of Holguín (UHO)
+# Frontend — Sistema de Informatización (UHO)
 
-Este sistema constituye una plataforma modular institucional diseñada para soportar los procesos clave de la Universidad de Holguín, incluyendo:
+Este documento describe la arquitectura, alcance y pasos prácticos para el frontend del proyecto de informatización de la Universidad de Holguín (UHO).
 
-- Gestión de Estudiantes  
-- Procesos Académicos  
-- Recursos Humanos  
-- Gestión de Mantenimiento  
-- Proyectos de Investigación  
-- Analítica Universitaria  
-- Inteligencia Artificial aplicada a procesos educativos y administrativos  
+## Visión general
+El frontend es una aplicación SPA (Single Page Application) construida con React y Vite, estilizada con TailwindCSS. Está organizada en módulos que corresponden a las apps del backend (students, academics, hr, etc.).
 
-## Objetivo General
-Proveer una arquitectura escalable, segura y adaptable a la infraestructura universitaria cubana, permitiendo la informatización progresiva de los procesos institucionales.
+Objetivos principales:
+- Proveer interfaces accesibles y responsivas para usuarios institucionales.
+- Consumir APIs del backend de manera segura (JWT).
+- Mantener un diseño modular para facilitar despliegue por módulos.
 
-## Arquitectura
-El sistema está compuesto por:
+## Alcance
+Incluye:
+- Interfaces principales para estudiantes, docentes, personal administrativo y mantenimiento.
+- Componentes reutilizables (formularios, tablas, autenticación, notificaciones).
+- Integración con endpoints de backend para datos y almacenamiento (MinIO).
 
-- **Backend Django REST Framework**
-- **Frontend React + Vite + Tailwind**
-- **Base de datos PostgreSQL**
-- **MinIO para almacenamiento**
-- **Docker para despliegue**
-- **GitLab CI/CD para integración continua**
+## Estructura del proyecto
+- `src/` — código fuente principal
+	- `pages/` — páginas principales por módulo
+	- `services/` — clientes API (axios) y lógica de integración
+	- `components/` — componentes reutilizables
 
-## Modularidad
-Cada módulo se implementa como una app independiente en Django y como una sección autónoma en el frontend React.
+## Autenticación y Autorización
+- Uso de JWT (token almacenado de forma segura — preferentemente httpOnly cookies o almacenamiento seguro).
+- El frontend respeta el modelo RBAC del backend; sólo muestra acciones según permisos del usuario.
 
-## Seguridad
-El sistema utiliza JWT y RBAC (Role-Based Access Control) para garantizar la separación lógica de permisos institucionales.
+## Desarrollo local
+Requisitos: Node.js 18+ y npm.
 
-## Auditoría y Backups
-Incluye middleware de auditoría y scripts automáticos de respaldo PostgreSQL.
+1) Instalar dependencias:
+```powershell
+cd frontend\src
+npm ci
+```
+
+2) Ejecutar servidor de desarrollo:
+```powershell
+npm run dev
+```
+
+3) Build de producción:
+```powershell
+npm run build
+```
+
+4) Tests (si están definidos):
+```powershell
+npm test
+```
+
+## CI / CD
+- El workflow de GitHub Actions `.github/workflows/ci.yml` instala dependencias y ejecuta build/tests del frontend en `frontend/src`.
+
+## Buenas prácticas
+- Usar ramas `feature/*` y abrir PRs a `develop`.
+- Mantener `package-lock.json` para builds reproducibles.
+- Añadir ESLint/Prettier para calidad de código; ya hay scripts `lint` y `format` en `package.json`.
+
+## Design tokens y estilos
+- TailwindCSS está configurado; modifica `tailwind.config.js` para añadir variables y temas compartidos.
+
+---
+Este README debe servir como documento de arquitectura y alcance del frontend; mantenlo actualizado para reflejar cambios en la integración con el backend.
