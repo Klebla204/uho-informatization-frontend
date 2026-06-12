@@ -61,5 +61,26 @@ npm test
 ## Design tokens y estilos
 - TailwindCSS está configurado; modifica `tailwind.config.js` para añadir variables y temas compartidos.
 
+## Roadmap
+
+A continuación hay un mapa de ruta (roadmap) con la lista de verificación de los módulos lógicos pendientes y las tareas de frontend que estructurarán el trabajo. Marca cada ítem cuando esté implementado (componentes, rutas, integración con APIs, tests y documentación).
+
+- [ ] auth — Flujos de login/logout, gestión de tokens, protección de rutas
+- [ ] users — Interfaces de perfil, administración de usuarios y roles
+- [ ] students — Páginas de matrícula, historial académico y gestión de expedientes
+- [ ] academics — Páginas para cursos, horarios, asignación de profesores
+- [ ] hr — Interfaces para personal, control de asistencia y nóminas
+- [ ] maintenance — Panel de incidencias y formularios para solicitudes
+- [ ] research — Módulo para registro de proyectos y publicaciones
+- [ ] analytics — Dashboards, visualizaciones y endpoints de agregación
+- [ ] storage — Integración con MinIO para subida/descarga, previews y políticas
+- [ ] ci-cd — Tests de integración y pipelines para build/deploy
+- [ ] accessibility — Auditoría y corrección de accesibilidad (WCAG básico)
+
+Notas:
+- Cada ítem debe incluir: componentes reutilizables, rutas protegidas por permisos, tests y documentación de uso.
+- Prioridad inicial alineada con backend: `users`, `students`, `academics`.
+- Se recomienda vincular tareas de frontend a los milestones del backend para entregas coordinadas.
+
 ---
 Este README debe servir como documento de arquitectura y alcance del frontend; mantenlo actualizado para reflejar cambios en la integración con el backend.
