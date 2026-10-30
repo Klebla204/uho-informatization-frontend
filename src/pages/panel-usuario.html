@@ -4,19 +4,20 @@
 .detail-layout{display:grid;grid-template-columns:260px 1fr;gap:28px}.cover{display:grid;height:320px;place-items:center;overflow:hidden;border-radius:10px;background:linear-gradient(135deg,#1a3a6b,#22509a);font-size:76px;box-shadow:var(--shadow)}.cover img{width:100%;height:100%;object-fit:cover}.availability{margin-top:14px}.availability h2{margin:0 0 10px;font-size:12px;text-transform:uppercase;color:var(--muted)}.availability-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:11px}.availability-row:last-child{border:0}.book-meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;color:var(--ink-soft);font-size:12px}.isbn{color:var(--muted);font:12px monospace}.tags{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.tag{padding:4px 10px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-size:10px}.tabs{display:flex;gap:5px;margin-top:18px;border-bottom:1px solid var(--line)}.tab{padding:9px 12px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);font:12px 'Sora',sans-serif;cursor:pointer}.tab[aria-selected=true]{border-color:var(--blue);color:var(--blue);font-weight:700}.tab-panel{display:none;padding:15px 0;color:var(--ink-soft);font-size:13px;line-height:1.7}.tab-panel.active{display:block}.book-link{cursor:pointer}.book-link:hover{color:var(--blue)}.catalog-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}.catalog-toolbar>.input{flex:1 1 240px;width:auto}.catalog-toolbar .select{flex:0 1 190px;width:auto}.check{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink-soft)}.view-toggle{display:flex;gap:4px}.view-toggle .button[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}.chip{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border:0;border-radius:999px;background:var(--blue-soft);color:var(--blue);font:600 11px 'Sora',sans-serif;cursor:pointer}.chip.clear{background:#fff;border:1px solid var(--line);color:var(--muted)}.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}.book-grid.as-list{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 16px}.book-card{display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:10px;transition:transform .15s,box-shadow .15s}.book-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.card-cover{position:relative;display:grid;height:150px;place-items:center;overflow:hidden;color:#fff;font:800 46px 'Sora',sans-serif;cursor:pointer}.card-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.card-badge{position:absolute;top:8px;right:8px;background:#fff}.card-body{display:flex;flex-direction:column;gap:5px;flex:1;padding:12px}.card-title{font-size:13px;font-weight:700;cursor:pointer}.card-title:hover{color:var(--blue)}.card-author{font-size:11px;color:var(--muted)}.card-action{display:flex;gap:6px;margin-top:auto;padding-top:8px}.card-action .input{min-height:34px;padding:5px 8px;font-size:11px;flex:1;min-width:0}.card-action .button{min-height:34px;padding:5px 10px}.skeleton{height:270px;border-radius:10px;background:linear-gradient(90deg,#eef2f4 25%,#f7f9fa 50%,#eef2f4 75%);background-size:200% 100%;animation:sk 1.2s infinite}@keyframes sk{to{background-position:-200% 0}}@media(max-width:720px){.detail-layout{grid-template-columns:1fr}.cover{height:230px}}
 </style></head>
 <body class="page-shell"><header class="topbar"><a class="brand" href="#usuario">Biblio<span>UHO</span></a><span class="topbar-title">Área personal del usuario</span><button type="button" id="logout" style="margin-left:auto;padding:7px 14px;border:1px solid #dce4e7;border-radius:5px;background:#fff;color:#102a43;font:inherit;font-size:13px;cursor:pointer">Cerrar sesión</button></header>
-<div class="user-layout"><aside class="user-side"><div class="user-identity"><div class="avatar" id="avatar"></div><div><div class="user-name" id="userName"></div><div class="user-role" id="userRole"></div></div></div><nav class="user-menu" aria-label="Secciones personales"><button type="button" data-section="home">Inicio</button><button type="button" data-section="loans" aria-current="true">Mis préstamos</button><button type="button" data-section="catalog">Catálogo</button><button type="button" data-section="requests">Mis solicitudes</button><button type="button" data-section="profile">Mi perfil</button><button type="button" data-section="card">Mi carnet QR</button></nav></aside>
+<div class="user-layout"><aside class="user-side"><div class="user-identity"><div class="avatar" id="avatar"></div><div><div class="user-name" id="userName"></div><div class="user-role" id="userRole"></div></div></div><nav class="user-menu" aria-label="Secciones personales"><button type="button" data-section="home">Inicio</button><button type="button" data-section="loans" aria-current="true">Mis préstamos</button><button type="button" data-section="catalog">Catálogo</button><button type="button" data-section="requests">Mis solicitudes</button><button type="button" data-section="notifications">Notificaciones <span id="notifCount" hidden style="margin-left:4px;padding:1px 7px;border-radius:999px;background:#a9473d;color:#fff;font-size:10px"></span></button><button type="button" data-section="profile">Mi perfil</button><button type="button" data-section="card">Mi carnet QR</button></nav></aside>
 <main class="content" id="usuario">
 <section id="section-home" class="user-section"><h1 class="page-heading">Bienvenido, <span id="welcomeName"></span></h1><p class="page-lead">Resumen de tu actividad bibliotecaria</p><div class="panel"><h2>Tu cuenta está activa</h2><p class="page-lead" id="homeSummary">Desde este panel puedes consultar tus préstamos, solicitudes, perfil y carnet.</p></div></section>
 <section id="section-loans" class="user-section active"><h1 class="page-heading">Mis préstamos</h1><p class="page-lead">Consulta préstamos activos y fechas de devolución.</p><div class="kpis"><div class="kpi"><strong id="kActive">0</strong><span>Activos</span></div><div class="kpi"><strong id="kPending">0</strong><span>Pendientes</span></div><div class="kpi"><strong id="kOverdue">0</strong><span>Vencidos</span></div><div class="kpi"><strong id="kHistory">0</strong><span>En el historial</span></div></div><div class="panel" id="loanList"></div></section>
 <section id="section-catalog" class="user-section"><h1 class="page-heading">Catálogo</h1><p class="page-lead">Busca un libro y solicita su préstamo.</p><div class="catalog-toolbar"><input class="input" id="bookSearch" placeholder="Buscar por título, autor o ISBN" aria-label="Buscar libros"><select class="select" id="categoryFilter" aria-label="Categoría"><option value="">Todas las categorías</option></select><select class="select" id="libraryFilter" aria-label="Biblioteca"><option value="">Todas las bibliotecas</option></select><label class="check"><input type="checkbox" id="availableOnly"> Solo disponibles</label><div class="view-toggle"><button type="button" class="button secondary" id="viewGrid" aria-pressed="true">Cuadrícula</button><button type="button" class="button secondary" id="viewList" aria-pressed="false">Lista</button></div></div><div class="chips" id="activeFilters"></div><p class="page-lead" id="bookCount"></p><div id="bookList" class="book-grid"></div></section>
 <section id="section-book" class="user-section"><p><button class="button secondary" id="backToCatalog" type="button">← Volver al catálogo</button></p><div id="bookDetail"></div></section>
 <section id="section-requests" class="user-section"><h1 class="page-heading">Mis solicitudes</h1><p class="page-lead">Estado de tus solicitudes de préstamo.</p><div class="panel" id="requestList"></div></section>
-<section id="section-profile" class="user-section"><h1 class="page-heading">Mi perfil</h1><p class="page-lead">Información asociada a tu cuenta institucional.</p><div class="profile-grid" id="profileGrid"></div><p style="margin-top:16px"><button class="button" id="saveProfile" type="button">Guardar cambios</button></p></section>
+<section id="section-notifications" class="user-section"><h1 class="page-heading">Notificaciones</h1><p class="page-lead">Avisos sobre las fechas de devolución de tus préstamos.</p><p><button class="button secondary" type="button" id="readAll">Marcar todas como leídas</button></p><div class="panel" id="notifList"></div></section>
+<section id="section-profile" class="user-section"><h1 class="page-heading">Mi perfil</h1><p class="page-lead">Verifica y completa tus datos. Con ellos se genera tu carnet de préstamos con código QR.</p><div class="panel" id="profileBanner" hidden style="margin-bottom:14px;border-left:4px solid #b7791f"><strong>Perfil incompleto.</strong> Completa todos los campos y guarda para poder solicitar préstamos y obtener tu carnet.</div><div class="profile-grid" id="profileGrid"></div><p style="margin-top:16px"><button class="button" id="saveProfile" type="button">Guardar cambios</button></p></section>
 <section id="section-card" class="user-section"><h1 class="page-heading">Mi carnet</h1><p class="page-lead">Identificación de usuario para atención presencial.</p><div class="panel" style="max-width:620px" id="cardBox"></div></section>
 </main></div><div id="toast" class="toast" role="status" hidden></div>
 <script>
 (()=>{let s=null;try{s=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}if(!s||!s.access)location.replace('../../login.html')})();
-document.getElementById('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');location.href='../../login.html'});
+document.getElementById('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');location.href='catalogo.html'});
 const buttons=[...document.querySelectorAll('[data-section]')];buttons.forEach(button=>button.addEventListener('click',()=>{buttons.forEach(item=>item.removeAttribute('aria-current'));button.setAttribute('aria-current','true');document.querySelectorAll('.user-section').forEach(section=>section.classList.remove('active'));document.getElementById(`section-${button.dataset.section}`).classList.add('active')}));const toast=document.getElementById('toast');
 </script>
 <script>
@@ -49,8 +50,8 @@ async function api(path,opts={}){
 const list=async p=>{const r=await api(p);if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();return Array.isArray(d)?d:d.results||[]};
 
 function loanRow(l){
-  const [label,cls]=ST[l.estado]||[l.estado,''];
-  const when=l.estado==='LISTO'&&l.fecha_recogida_limite?'Recoger antes del '+fmt(l.fecha_recogida_limite):l.estado==='DEVUELTO'?'Devuelto el '+fmt(l.fecha_devolucion_real):'Devolver antes del '+fmt(l.fecha_devolucion_pactada);
+  const [label,cls]=l.vencido?['Vencido','bad']:(ST[l.estado]||[l.estado,'']);
+  const when=l.estado==='LISTO'&&l.fecha_recogida_limite?'Recoger antes del '+fmt(l.fecha_recogida_limite):l.estado==='DEVUELTO'?'Devuelto el '+fmt(l.fecha_devolucion_real):l.vencido?'Venció el '+fmt(l.fecha_devolucion_pactada):'Devolver antes del '+fmt(l.fecha_devolucion_pactada)+(l.estado==='ACTIVO'&&l.dias_restantes!==null&&l.dias_restantes<=3?` (${l.dias_restantes===0?'hoy':'en '+l.dias_restantes+' día(s)'})`:'');
   return `<div class="loan-row"><span class="loan-icon">📘</span><div class="loan-info"><strong>${esc(l.libro_titulo)}</strong><small>${esc(l.biblioteca_nombre)} · Ejemplar ${esc(l.codigo_ejemplar)} · Solicitado el ${fmt(l.fecha_solicitud)} · ${when}</small></div><span class="status ${cls}">${label}</span></div>`;
 }
 const empty=t=>`<p class="page-lead" style="padding:14px 0">${t}</p>`;
@@ -59,9 +60,10 @@ async function loadLoans(){
   try{
     const loans=await list('/api/v1/prestamos/mis-prestamos/');
     const count=s=>loans.filter(l=>l.estado===s).length;
-    const inProgress=['APROBADO','LISTO','ACTIVO'].reduce((n,s)=>n+count(s),0);
-    $('kActive').textContent=inProgress;$('kPending').textContent=count('PENDIENTE');$('kOverdue').textContent=count('VENCIDO');$('kHistory').textContent=count('DEVUELTO');
-    $('homeSummary').textContent=`Tienes ${inProgress} pr\u00e9stamo(s) activo(s), ${count('PENDIENTE')} solicitud(es) pendiente(s) y ${count('VENCIDO')} vencido(s).`;
+    const overdue=loans.filter(l=>l.vencido).length;
+    const inProgress=loans.filter(l=>['APROBADO','LISTO','ACTIVO'].includes(l.estado)&&!l.vencido).length;
+    $('kActive').textContent=inProgress;$('kPending').textContent=count('PENDIENTE');$('kOverdue').textContent=overdue;$('kHistory').textContent=count('DEVUELTO');
+    $('homeSummary').textContent=`Tienes ${inProgress} préstamo(s) activo(s), ${count('PENDIENTE')} solicitud(es) pendiente(s) y ${overdue} vencido(s).`;
     const current=loans.filter(l=>['APROBADO','LISTO','ACTIVO','VENCIDO'].includes(l.estado));
     const others=loans.filter(l=>!['APROBADO','LISTO','ACTIVO','VENCIDO'].includes(l.estado));
     $('loanList').innerHTML=current.map(loanRow).join('')||empty('No tienes préstamos en curso.');
@@ -185,29 +187,89 @@ $('bookDetail').addEventListener('click',async e=>{
   else{const d=await r.json().catch(()=>({}));note(d.detail||'No se pudo enviar la solicitud.');btn.disabled=false}
 });
 
-const field=(label,value)=>`<div class=\"profile-field\"><label>${label}</label><span>${esc(value||'\u2014')}</span></div>`;
+const field=(label,value)=>`<div class="profile-field"><label>${label}</label><span>${esc(value||'—')}</span></div>`;
+let profile=null;
+const inputField=(label,id,value,extra='')=>`<div class="profile-field"><label for="${id}">${label}</label><input class="input" id="${id}" value="${esc(value)}" ${extra}></div>`;
+const selectField=(label,id,options,selected)=>`<div class="profile-field"><label for="${id}">${label}</label><select class="select" id="${id}"><option value="">Selecciona\u2026</option>${options.map(o=>`<option value="${esc(o.id)}"${o.id===selected?' selected':''}>${esc(o.nombre)}</option>`).join('')}</select></div>`;
+async function loadCareers(facultyId,selected){
+  const careers=facultyId?await list('/api/v1/usuarios/carreras/?facultad='+encodeURIComponent(facultyId)):[];
+  $('careerSelect').innerHTML='<option value="">Selecciona\u2026</option>'+careers.map(c=>`<option value="${esc(c.id)}"${c.id===selected?' selected':''}>${esc(c.nombre)}</option>`).join('');
+}
 async function loadProfile(){
   try{
     const r=await api('/api/v1/usuarios/mi-perfil/');if(!r.ok)throw 0;
-    const p=await r.json();const x=p.perfil||{};
-    let html=field('NOMBRE COMPLETO',`${p.nombre} ${p.apellidos}`)+field('USUARIO',p.usuario)+field('IDENTIDAD',p.ci)+field('CORREO',p.email);
-    if(x.carrera)html+=field('CARRERA',x.carrera)+field('FACULTAD',x.facultad)+field('A\u00d1O / CURSO',`${x.anio}\u00ba a\u00f1o \u00b7 ${x.tipo_curso}`);
-    if(x.cargo)html+=field('CARGO',x.cargo)+field('DEPARTAMENTO',x.departamento);
-    html+=`<div class=\"profile-field\"><label>TEL\u00c9FONO</label><input class=\"input\" id=\"phoneInput\" maxlength=\"30\" value=\"${esc(p.telefono)}\" aria-label=\"Tel\u00e9fono\"></div>`;
+    profile=await r.json();const x=profile.perfil||{};
+    $('profileBanner').hidden=profile.perfil_completo;
+    let html=inputField('NOMBRE','pfNombre',profile.nombre,'maxlength="150"')+inputField('APELLIDOS','pfApellidos',profile.apellidos,'maxlength="200"')+inputField('CI','pfCi',profile.ci,'maxlength="20"')+inputField('TEL\u00c9FONO','pfTelefono',profile.telefono,'maxlength="30"')+field('USUARIO',profile.usuario)+field('CORREO',profile.email);
+    if(profile.tipo_usuario==='ESTUDIANTE'){
+      const faculties=await list('/api/v1/usuarios/facultades/').catch(()=>{note('No se pudieron cargar las facultades.');return []});
+      html+=selectField('FACULTAD','pfFacultad',faculties,x.facultad_id)+`<div class="profile-field"><label for="careerSelect">CARRERA</label><select class="select" id="careerSelect"></select></div>`+inputField('A\u00d1O','pfAnio',x.anio||'','type="number" min="1" max="10"')+inputField('TIPO DE CURSO','pfTipoCurso',x.tipo_curso||'','maxlength="100" placeholder="Ej. Diurno"');
+    }else if(x.cargo){html+=field('CARGO',x.cargo)+field('DEPARTAMENTO',x.departamento)}
     $('profileGrid').innerHTML=html;
+    if(profile.tipo_usuario==='ESTUDIANTE'){
+      await loadCareers(x.facultad_id,x.carrera_id);
+      $('pfFacultad').addEventListener('change',e=>loadCareers(e.target.value,''));
+    }
   }catch{$('profileGrid').innerHTML=empty('No se pudo cargar tu perfil.')}
 }
 $('saveProfile').addEventListener('click',async()=>{
-  const r=await api('/api/v1/usuarios/mi-perfil/',{method:'PATCH',body:JSON.stringify({telefono:$('phoneInput').value.trim()})});
-  note(r.ok?'Cambios guardados.':'No se pudieron guardar los cambios.');
+  if(!profile)return;
+  const body={nombre:$('pfNombre').value,apellidos:$('pfApellidos').value,ci:$('pfCi').value,telefono:$('pfTelefono').value};
+  if(profile.tipo_usuario==='ESTUDIANTE'){
+    Object.assign(body,{facultad:$('pfFacultad').value||undefined,carrera:$('careerSelect').value||undefined,anio:$('pfAnio').value?Number($('pfAnio').value):undefined,tipo_curso:$('pfTipoCurso').value});
+  }
+  for(const k of Object.keys(body))if(body[k]===''||body[k]===undefined)delete body[k];
+  const r=await api('/api/v1/usuarios/mi-perfil/',{method:'PATCH',body:JSON.stringify(body)});
+  if(!r.ok){const d=await r.json().catch(()=>({}));note(d.detail||Object.values(d).flat()[0]||'No se pudieron guardar los cambios.');return}
+  const was=profile.perfil_completo;
+  await loadProfile();
+  if(profile.perfil_completo){note(was?'Cambios guardados.':'Perfil completo. Tu carnet fue generado.');await loadCard()}
+  else note('Cambios guardados. Faltan datos por completar.');
 });
+async function downloadCardPdf(){
+  const r=await api('/api/v1/usuarios/mi-carnet/pdf/');
+  if(!r.ok){note('No se pudo generar el PDF del carnet.');return}
+  const url=URL.createObjectURL(await r.blob());
+  const a=document.createElement('a');a.href=url;a.download='carnet-biblio-uho.pdf';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
 async function loadCard(){
   try{
-    const r=await api('/api/v1/usuarios/mi-carnet/');if(!r.ok)throw 0;
+    const r=await api('/api/v1/usuarios/mi-carnet/');
+    if(r.status===409){$('cardBox').innerHTML=`<h2>Carnet no disponible</h2><p class="page-lead">Completa tu perfil para generar tu carnet.</p><button class="button" type="button" id="goProfile">Completar perfil</button>`;return}
+    if(!r.ok)throw 0;
     const c=await r.json();
-    $('cardBox').innerHTML=`<h2>${esc(c.nombre_completo)}</h2><p class=\"user-role\">${esc(ROLES[c.tipo_usuario]||c.tipo_usuario)}${c.carrera?' \u00b7 '+esc(c.carrera):''}</p>${c.facultad?`<p class=\"user-role\">${esc(c.facultad)}</p>`:''}<p class=\"user-role\">C\u00f3digo del carnet</p><p style=\"font-family:monospace;font-size:12px;word-break:break-all\">${esc(c.codigo_qr)}</p>`;
+    const study=[c.carrera,c.facultad,c.anio?`${c.anio}\u00ba a\u00f1o \u00b7 ${c.tipo_curso}`:''].filter(Boolean).map(t=>`<p class="user-role">${esc(t)}</p>`).join('');
+    $('cardBox').innerHTML=`<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap"><div style="width:150px;height:150px;flex:0 0 auto" aria-label="C\u00f3digo QR del carnet">${c.qr_svg}</div><div><h2>${esc(c.nombre_completo)}</h2><p class="user-role">${esc(c.tipo_usuario_etiqueta)}</p><p class="user-role">CI: ${esc(c.ci)}</p>${study}<p class="user-role" style="font-family:monospace;word-break:break-all">ID: ${esc(c.codigo_qr)}</p><p style="margin-top:12px"><button class="button" type="button" id="downloadCard">Descargar carnet (PDF)</button></p></div></div>`;
+    $('cardBox').querySelector('svg').setAttribute('width','150');$('cardBox').querySelector('svg').setAttribute('height','150');
   }catch{$('cardBox').innerHTML=empty('No se pudo cargar tu carnet.')}
 }
-loadProfile();loadCard();loadLoans();loadFilterOptions();loadBooks();
+$('cardBox').addEventListener('click',e=>{
+  if(e.target.closest('#downloadCard'))downloadCardPdf();
+  if(e.target.closest('#goProfile'))showSection('profile');
+});
+async function loadNotifications(announce){
+  try{
+    const items=await list('/api/v1/prestamos/notificaciones/');
+    const unread=items.filter(n=>!n.leida).length;
+    $('notifCount').hidden=unread===0;$('notifCount').textContent=unread;
+    $('notifList').innerHTML=items.map(n=>`<div class="loan-row" style="${n.leida?'':'background:#f1f6fb'}"><span class="loan-icon">${n.tipo==='VENCIDO'?'⚠️':'🕔'}</span><div class="loan-info"><strong>${n.tipo==='VENCIDO'?'Préstamo vencido':'Próximo vencimiento'}</strong><small>${esc(n.mensaje)} · ${fmt(n.fecha_envio)}</small></div>${n.leida?'':`<button type="button" class="button secondary" data-read="${esc(n.id)}">Marcar leída</button>`}</div>`).join('')||empty('No tienes notificaciones.');
+    if(announce&&unread)note(`Tienes ${unread} notificación(es) sin leer.`);
+  }catch{$('notifList').innerHTML=empty('No se pudieron cargar las notificaciones.')}
+}
+$('notifList').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-read]');if(!b)return;
+  await api(`/api/v1/prestamos/notificaciones/${b.dataset.read}/leer/`,{method:'POST'});loadNotifications();
+});
+$('readAll').addEventListener('click',async()=>{await api('/api/v1/prestamos/notificaciones/leer-todas/',{method:'POST'});loadNotifications()});
+async function init(){
+  await Promise.all([loadProfile(),loadLoans(),loadFilterOptions(),loadBooks()]);
+  await loadCard();
+  loadNotifications(true);
+  const wantedBook=new URLSearchParams(location.search).get('libro');
+  if(wantedBook){history.replaceState(null,'',location.pathname);openBook(wantedBook)}
+  if(profile&&!profile.perfil_completo&&!wantedBook)showSection('profile');
+}
+init();
 })();
 </script></body></html>

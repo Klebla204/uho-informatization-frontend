@@ -1,43 +1,149 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Catálogo público | BiblioUHO</title>
-  <link rel="stylesheet" href="shared.css">
-  <style>
-    .hero{padding:30px;color:white;background:linear-gradient(115deg,#102542,#1a3a6b 70%,#24706e);border:0}.hero h1{margin:0 0 6px;font-size:25px}.hero p{margin:0 0 18px;color:#d4dfec;font-size:13px}.search-row{display:flex;gap:8px;max-width:700px}.search-row .input{flex:1}.stats{display:flex;gap:28px;margin-top:18px;font-size:11px;color:#d3ddec}.stats strong{display:block;color:white;font-size:18px}.catalog-layout{display:grid;grid-template-columns:210px 1fr;gap:18px;margin-top:18px}.filter-section{padding:0 0 16px;margin:0 0 16px;border-bottom:1px solid var(--line)}.filter-section:last-child{border:0}.filter-title{margin-bottom:8px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.filter-option{display:flex;gap:7px;align-items:center;margin:8px 0;color:var(--ink-soft);font-size:11px}.filter-option input{accent-color:var(--blue)}.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:12px}.book-card{overflow:hidden;padding:0;text-align:left;cursor:pointer;color:inherit}.book-card:hover{transform:translateY(-2px)}.book-cover{display:grid;height:118px;place-items:center;font-size:38px}.book-data{display:block;padding:12px}.book-data h2{margin:0 0 4px;font-size:12px;line-height:1.4}.book-data p{margin:0 0 9px;color:var(--muted);font-size:11px}.results-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;font-size:12px;color:var(--muted)}
-    @media(max-width:700px){.catalog-layout{grid-template-columns:1fr}.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.filter-section{padding:12px;margin:0;border:1px solid var(--line);border-radius:8px;background:#fff}.hero{padding:22px}.stats{gap:16px}.book-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Catálogo público | BiblioUHO</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+.hero{padding:30px;color:#fff;background:linear-gradient(115deg,#102542,#1a3a6b 70%,#24706e);border:0}.hero h1{margin:0 0 6px;font-size:25px}.hero p{margin:0 0 18px;color:#d4dfec;font-size:13px}.search-row{display:flex;gap:8px;max-width:700px}.search-row .input{flex:1}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 12px}.toolbar .select{flex:0 1 200px;width:auto}.check{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink-soft)}.view-toggle{display:flex;gap:4px;margin-left:auto}.view-toggle .button[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}.chip{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border:0;border-radius:999px;background:var(--blue-soft);color:var(--blue);font:600 11px 'Sora',sans-serif;cursor:pointer}.chip.clear{background:#fff;border:1px solid var(--line);color:var(--muted)}
+.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}.book-grid.as-list{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 16px}
+.book-card{display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:transform .15s,box-shadow .15s}.book-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.card-cover{position:relative;display:grid;height:150px;place-items:center;overflow:hidden;color:#fff;font:800 46px 'Sora',sans-serif}.card-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.card-badge{position:absolute;top:8px;right:8px;background:#fff}
+.card-body{display:flex;flex-direction:column;gap:5px;flex:1;padding:12px}.card-title{font-size:13px;font-weight:700}.card-author{font-size:11px;color:var(--muted)}
+.list-row{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}.list-row:last-child{border-bottom:0}.list-icon{display:grid;width:42px;height:54px;flex:0 0 auto;place-items:center;border-radius:6px;background:var(--blue-soft);font-size:21px}.list-info{flex:1}.list-info strong{display:block;font-size:12px}.list-info small{display:block;margin-top:4px;color:var(--muted);font-size:10px}
+.skeleton{height:270px;border-radius:10px;background:linear-gradient(90deg,#eef2f4 25%,#f7f9fa 50%,#eef2f4 75%);background-size:200% 100%;animation:sk 1.2s infinite}@keyframes sk{to{background-position:-200% 0}}
+.detail-layout{display:grid;grid-template-columns:260px 1fr;gap:28px}.cover{display:grid;height:320px;place-items:center;overflow:hidden;border-radius:10px;background:linear-gradient(135deg,#1a3a6b,#22509a);font-size:76px;box-shadow:var(--shadow)}.cover img{width:100%;height:100%;object-fit:cover}.availability{margin-top:14px}.availability h2{margin:0 0 10px;font-size:12px;text-transform:uppercase;color:var(--muted)}.availability-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:11px}.availability-row:last-child{border:0}.book-meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;color:var(--ink-soft);font-size:12px}.isbn{color:var(--muted);font:12px monospace}.tags{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.tag{padding:4px 10px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-size:10px}.tabs{display:flex;gap:5px;margin-top:18px;border-bottom:1px solid var(--line)}.tab{padding:9px 12px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);font:12px 'Sora',sans-serif;cursor:pointer}.tab[aria-selected=true]{border-color:var(--blue);color:var(--blue);font-weight:700}.tab-panel{display:none;padding:15px 0;color:var(--ink-soft);font-size:13px;line-height:1.7}.tab-panel.active{display:block}.primary-action{width:100%;margin-top:8px}.note{color:var(--muted);font-size:11px;text-align:center}
+.top-actions{margin-left:auto}.top-actions .button{min-height:34px}
+@media(max-width:720px){.detail-layout{grid-template-columns:1fr}.cover{height:230px}.hero{padding:22px}}
+</style>
 </head>
 <body class="page-shell">
-  <header class="topbar"><a class="brand" href="#inicio" aria-label="BiblioUHO">Biblio<span>UHO</span></a><span class="topbar-title">Catálogo público · Acceso libre</span></header>
-  <main class="page-main" id="inicio">
-    <section class="hero panel"><h1>Catálogo de Bibliotecas<br>Universidad de Holguín</h1><p>Explora títulos y disponibilidad en las bibliotecas de la UHO.</p><form id="searchForm" class="search-row"><input class="input" id="searchInput" type="search" placeholder="Buscar por título, autor o ISBN" aria-label="Buscar libros"><button class="button" type="submit">Buscar</button></form><div class="stats"><div><strong>4,280</strong>Títulos</div><div><strong>12,940</strong>Ejemplares</div><div><strong>4</strong>Bibliotecas</div></div></section>
-    <div class="catalog-layout">
-      <aside class="filters panel" aria-label="Filtros del catálogo">
-        <section class="filter-section"><div class="filter-title">Biblioteca</div><label class="filter-option"><input type="checkbox" name="library" value="Central"> Central</label><label class="filter-option"><input type="checkbox" name="library" value="Facultad Técnica"> Facultad Técnica</label><label class="filter-option"><input type="checkbox" name="library" value="Ciencias Sociales"> Ciencias Sociales</label><label class="filter-option"><input type="checkbox" name="library" value="Ciencias Naturales"> Ciencias Naturales</label></section>
-        <section class="filter-section"><div class="filter-title">Categoría</div><label class="filter-option"><input type="checkbox" name="category" value="Ciencias Técnicas"> Ciencias Técnicas</label><label class="filter-option"><input type="checkbox" name="category" value="Humanidades"> Humanidades</label><label class="filter-option"><input type="checkbox" name="category" value="Literatura"> Literatura</label><label class="filter-option"><input type="checkbox" name="category" value="Ciencias Sociales"> Ciencias Sociales</label></section>
-        <section class="filter-section"><div class="filter-title">Disponibilidad</div><label class="filter-option"><input id="availableOnly" type="checkbox"> Solo disponibles</label></section>
-      </aside>
-      <section aria-label="Resultados del catálogo"><div class="results-head"><span id="resultCount" aria-live="polite"></span><button id="clearFilters" class="button secondary" type="button">Limpiar filtros</button></div><div id="bookGrid" class="book-grid"></div><p id="emptyState" class="empty-state panel" hidden>No se encontraron libros con esos filtros.</p></section>
-    </div>
-  </main>
-  <div id="toast" class="toast" role="status" hidden></div>
-  <script>
-    const books=[
-      {title:'Fundamentos de Programación',author:'Luis Joyanes Aguilar',isbn:'978-84-415-3746-1',category:'Ciencias Técnicas',library:'Central',available:3,icon:'📘',color:'#dbeafe'},
-      {title:'Álgebra Lineal y sus Aplicaciones',author:'David C. Lay',isbn:'978-84-205-5000-4',category:'Ciencias Técnicas',library:'Facultad Técnica',available:2,icon:'📗',color:'#dcfce7'},
-      {title:'Sistemas Operativos Modernos',author:'Andrew Tanenbaum',isbn:'978-607-32-4338-4',category:'Ciencias Técnicas',library:'Central',available:0,icon:'📙',color:'#fef3c7'},
-      {title:'Historia de Cuba Contemporánea',author:'García Álvarez',isbn:'978-959-02-1000-2',category:'Humanidades',library:'Ciencias Sociales',available:5,icon:'📕',color:'#fee2e2'},
-      {title:'Introducción a la Inteligencia Artificial',author:'Russell y Norvig',isbn:'978-84-205-4000-5',category:'Ciencias Técnicas',library:'Facultad Técnica',available:1,icon:'📒',color:'#ede9fe'},
-      {title:'Redes de Computadoras',author:'Andrew Tanenbaum',isbn:'978-607-32-4450-3',category:'Ciencias Técnicas',library:'Ciencias Naturales',available:0,icon:'📔',color:'#cffafe'},
-      {title:'Cálculo Diferencial e Integral',author:'Ron Larson',isbn:'978-607-32-3924-0',category:'Ciencias Técnicas',library:'Central',available:4,icon:'📓',color:'#f0fdf4'},
-      {title:'Economía Política',author:'Paul Samuelson',isbn:'978-84-206-8960-0',category:'Ciencias Sociales',library:'Ciencias Sociales',available:0,icon:'📃',color:'#fce7f3'}
-    ];
-    const searchInput=document.getElementById('searchInput');const grid=document.getElementById('bookGrid');const toast=document.getElementById('toast');let toastTimer;
-    function showToast(message){toast.textContent=message;toast.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.hidden=true,2600)}
-    function renderBooks(){const query=searchInput.value.trim().toLocaleLowerCase('es');const libraries=[...document.querySelectorAll('[name="library"]:checked')].map(input=>input.value);const categories=[...document.querySelectorAll('[name="category"]:checked')].map(input=>input.value);const availableOnly=document.getElementById('availableOnly').checked;const filtered=books.filter(book=>(!query||`${book.title} ${book.author} ${book.isbn}`.toLocaleLowerCase('es').includes(query))&&(!libraries.length||libraries.includes(book.library))&&(!categories.length||categories.includes(book.category))&&(!availableOnly||book.available>0));document.getElementById('resultCount').textContent=`${filtered.length} títulos`;document.getElementById('emptyState').hidden=filtered.length>0;grid.innerHTML=filtered.map(book=>`<button class="book-card panel" type="button" data-book="${books.indexOf(book)}"><span class="book-cover" style="background:${book.color}">${book.icon}</span><span class="book-data"><h2>${book.title}</h2><p>${book.author}</p><span class="status ${book.available?'good':'bad'}">${book.available?`${book.available} disponibles`:'No disponible'}</span></span></button>`).join('')}
-    document.getElementById('searchForm').addEventListener('submit',event=>{event.preventDefault();renderBooks()});searchInput.addEventListener('input',renderBooks);document.querySelectorAll('[name="library"],[name="category"],#availableOnly').forEach(input=>input.addEventListener('change',renderBooks));document.getElementById('clearFilters').addEventListener('click',()=>{document.querySelectorAll('.filters input').forEach(input=>input.checked=false);searchInput.value='';renderBooks()});grid.addEventListener('click',event=>{const card=event.target.closest('[data-book]');if(card)showToast(`Libro seleccionado: ${books[Number(card.dataset.book)].title}`)});renderBooks();
-  </script>
+<header class="topbar"><a class="brand" href="catalogo.html" aria-label="BiblioUHO">Biblio<span>UHO</span></a><span class="topbar-title">Catálogo público · Acceso libre</span><div class="top-actions"><a class="button" id="accessButton" href="../../login.html">Acceder</a></div></header>
+<main class="page-main" id="inicio">
+<div id="catalogView">
+<section class="hero panel"><h1>Catálogo de Bibliotecas<br>Universidad de Holguín</h1><p>Explora títulos y disponibilidad en las bibliotecas de la UHO.</p><form id="searchForm" class="search-row"><input class="input" id="searchInput" type="search" placeholder="Buscar por título, autor o ISBN" aria-label="Buscar libros"><button class="button" type="submit">Buscar</button></form></section>
+<div class="toolbar"><select class="select" id="categoryFilter" aria-label="Categoría"><option value="">Todas las categorías</option></select><select class="select" id="libraryFilter" aria-label="Biblioteca"><option value="">Todas las bibliotecas</option></select><label class="check"><input type="checkbox" id="availableOnly"> Solo disponibles</label><div class="view-toggle"><button type="button" class="button secondary" id="viewGrid" aria-pressed="true">Cuadrícula</button><button type="button" class="button secondary" id="viewList" aria-pressed="false">Lista</button></div></div>
+<div class="chips" id="activeFilters"></div><p class="page-lead" id="resultCount" aria-live="polite"></p><div id="bookList" class="book-grid"></div>
+</div>
+<div id="bookView" hidden><p><button class="button secondary" id="backToCatalog" type="button">← Volver al catálogo</button></p><div id="bookDetail"></div></div>
+</main>
+<div id="toast" class="toast" role="status" hidden></div>
+<script>
+const API='http://localhost:8000';
+const $=id=>document.getElementById(id);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const empty=t=>`<p class="page-lead" style="padding:14px 0;grid-column:1/-1">${t}</p>`;
+let toastTimer;const note=m=>{const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,3000)};
+let session=null;try{session=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}
+const isStaff=s=>s&&(['BIBLIOTECARIO','ADMINISTRADOR','SUPER_ADMIN'].includes(s.tipo_usuario)||s.is_staff);
+if(session&&session.access){const a=$('accessButton');a.textContent='Mi panel';a.href=isStaff(session)?'bibliotecario.html':'panel-usuario.html'}
+
+const list=async p=>{const r=await fetch(API+p);if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();return Array.isArray(d)?d:d.results||[]};
+const GRADIENTS=['#1a3a6b,#22509a','#1d4d67,#36746f','#4a3a6b,#6b5aa8','#6b3a3a,#a85a5a','#3a5a3a,#5a9a6a'];
+const authorsOf=b=>(b.autores||[]).map(a=>`${a.nombre} ${a.apellidos}`.trim()).join(', ');
+
+function bookCard(b){
+  const avail=b.ejemplares_disponibles||0;
+  const grad=GRADIENTS[(b.titulo||'').length%GRADIENTS.length];
+  const cat=(b.categorias||[])[0];
+  const badge=avail>0?`<span class="status good card-badge">${avail} disp.</span>`:'<span class="status bad card-badge">Agotado</span>';
+  return `<article class="book-card" data-detail="${esc(b.id)}"><div class="card-cover" style="background:linear-gradient(135deg,${grad})">${esc((b.titulo||'?').charAt(0).toUpperCase())}${b.portada_url?`<img src="${esc(b.portada_url)}" alt="" loading="lazy">`:''}${badge}</div><div class="card-body">${cat?`<span class="tag" style="align-self:flex-start">${esc(cat.nombre)}</span>`:''}<div class="card-title">${esc(b.titulo)}</div><div class="card-author">${esc(authorsOf(b))}</div></div></article>`;
+}
+function bookRow(b){
+  const avail=b.ejemplares_disponibles||0;
+  return `<div class="list-row" data-detail="${esc(b.id)}"><span class="list-icon">📘</span><div class="list-info"><strong>${esc(b.titulo)}</strong><small>${esc(authorsOf(b))} · ${avail} de ${b.ejemplares_totales||0} disponibles</small></div><span class="status ${avail?'good':'bad'}">${avail?'Disponible':'No disponible'}</span></div>`;
+}
+
+const filters={q:'',cat:'',lib:'',avail:false};
+let view='grid';
+async function loadFilterOptions(){
+  try{
+    const [cats,libs]=await Promise.all([list('/api/v1/categorias/'),list('/api/v1/bibliotecas/')]);
+    $('categoryFilter').innerHTML+=cats.map(c=>`<option value="${esc(c.id)}">${esc(c.nombre)}</option>`).join('');
+    $('libraryFilter').innerHTML+=libs.map(l=>`<option value="${esc(l.id)}">${esc(l.nombre)}</option>`).join('');
+  }catch{note('No se pudieron cargar los filtros.')}
+}
+function renderChips(){
+  const sel=id=>{const s=$(id);return s.options[s.selectedIndex].text};
+  const chips=[];
+  if(filters.q)chips.push(['q','Texto: '+filters.q]);
+  if(filters.cat)chips.push(['cat',sel('categoryFilter')]);
+  if(filters.lib)chips.push(['lib',sel('libraryFilter')]);
+  if(filters.avail)chips.push(['avail','Solo disponibles']);
+  $('activeFilters').innerHTML=chips.map(([k,t])=>`<button type="button" class="chip" data-clear="${k}">${esc(t)} ×</button>`).join('')+(chips.length>1?'<button type="button" class="chip clear" data-clear="all">Limpiar filtros</button>':'');
+}
+function syncControls(){$('searchInput').value=filters.q;$('categoryFilter').value=filters.cat;$('libraryFilter').value=filters.lib;$('availableOnly').checked=filters.avail}
+async function loadBooks(){
+  renderChips();
+  $('bookList').className=view==='grid'?'book-grid':'book-grid as-list';
+  $('bookList').innerHTML=view==='grid'?'<div class="skeleton"></div>'.repeat(6):'';
+  const params=new URLSearchParams();
+  if(filters.q)params.set('q',filters.q);
+  if(filters.cat)params.set('categoria',filters.cat);
+  if(filters.lib)params.set('biblioteca',filters.lib);
+  if(filters.avail)params.set('disponibilidad','disponible');
+  const qs=params.toString();
+  try{
+    const books=await list('/api/v1/libros/'+(qs?'?'+qs:''));
+    $('resultCount').textContent=books.length===1?'1 título':`${books.length} títulos`;
+    $('bookList').innerHTML=books.map(view==='grid'?bookCard:bookRow).join('')||empty('No se encontraron libros con esos filtros.');
+  }catch{$('resultCount').textContent='';$('bookList').innerHTML=empty('No se pudo cargar el catálogo. Verifica que el servidor esté en ejecución.')}
+}
+let timer;
+$('searchInput').addEventListener('input',e=>{filters.q=e.target.value.trim();clearTimeout(timer);timer=setTimeout(loadBooks,300)});
+$('searchForm').addEventListener('submit',e=>{e.preventDefault();filters.q=$('searchInput').value.trim();loadBooks()});
+$('categoryFilter').addEventListener('change',e=>{filters.cat=e.target.value;loadBooks()});
+$('libraryFilter').addEventListener('change',e=>{filters.lib=e.target.value;loadBooks()});
+$('availableOnly').addEventListener('change',e=>{filters.avail=e.target.checked;loadBooks()});
+$('activeFilters').addEventListener('click',e=>{
+  const c=e.target.closest('[data-clear]');if(!c)return;
+  if(c.dataset.clear==='all')Object.assign(filters,{q:'',cat:'',lib:'',avail:false});
+  else filters[c.dataset.clear]=c.dataset.clear==='avail'?false:'';
+  syncControls();loadBooks();
+});
+for(const [id,mode] of [['viewGrid','grid'],['viewList','list']])$(id).addEventListener('click',()=>{view=mode;$('viewGrid').setAttribute('aria-pressed',mode==='grid');$('viewList').setAttribute('aria-pressed',mode==='list');loadBooks()});
+
+function showCatalog(){$('bookView').hidden=true;$('catalogView').hidden=false}
+async function openBook(id){
+  $('catalogView').hidden=true;$('bookView').hidden=false;window.scrollTo(0,0);
+  $('bookDetail').innerHTML=empty('Cargando ficha…');
+  try{
+    const r=await fetch(API+'/api/v1/libros/'+encodeURIComponent(id)+'/');if(!r.ok)throw 0;
+    const b=await r.json();
+    const byLibrary={};
+    (b.ejemplares||[]).forEach(e=>{const l=byLibrary[e.biblioteca_nombre]||(byLibrary[e.biblioteca_nombre]={free:0});if(e.disponible)l.free++});
+    const rows=Object.entries(byLibrary).map(([name,l])=>`<div class="availability-row"><span>${esc(name)}</span><span class="status ${l.free?'good':'bad'}">${l.free?l.free+(l.free===1?' disponible':' disponibles'):'No disponible'}</span></div>`).join('')||empty('Sin ejemplares registrados.');
+    const free=Object.values(byLibrary).reduce((n,l)=>n+l.free,0);
+    const edition=[b.edicion,b.anio_edicion].filter(Boolean).join(' · ');
+    const tags=(b.categorias||[]).map(c=>`<span class="tag">${esc(c.nombre)}</span>`).join('');
+    const cover=b.portada_url?`<img src="${esc(b.portada_url)}" alt="Portada de ${esc(b.titulo)}">`:'📘';
+    const authors=authorsOf(b);
+    $('bookDetail').innerHTML=`<div class="detail-layout"><aside><div class="cover">${cover}</div><section class="panel availability"><h2>Disponibilidad por biblioteca</h2>${rows}</section></aside><section><span class="status ${free?'good':'bad'}">${free?'Disponible · '+free+(free===1?' ejemplar':' ejemplares'):'No disponible'}</span><h1 class="page-heading" style="margin-top:12px">${esc(b.titulo)}</h1><div class="book-meta">${authors?`<span><strong>Autor:</strong> ${esc(authors)}</span>`:''}${b.editorial?`<span><strong>Editorial:</strong> ${esc(b.editorial.nombre)}</span>`:''}${edition?`<span><strong>Edición:</strong> ${esc(edition)}</span>`:''}</div>${b.isbn?`<p class="isbn">ISBN: ${esc(b.isbn)}</p>`:''}<div class="tags">${tags}</div><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-tab="desc">Descripción</button><button class="tab" role="tab" aria-selected="false" data-tab="tech">Ficha técnica</button></div><div id="tab-desc" class="tab-panel active" role="tabpanel">${esc(b.resumen)||'Sin descripción.'}</div><div id="tab-tech" class="tab-panel" role="tabpanel">ISBN: ${esc(b.isbn||'—')}<br>Editorial: ${esc(b.editorial?b.editorial.nombre:'—')}<br>Ejemplares totales: ${b.ejemplares_totales??(b.ejemplares||[]).length}</div>${free?`<button class="button primary-action" type="button" data-request="${esc(b.id)}">Solicitar préstamo</button><p class="note">${session&&session.access?'Continuarás en tu panel para elegir la fecha de devolución.':'La solicitud requiere iniciar sesión con tu cuenta institucional.'}</p>`:''}</section></div>`;
+  }catch{$('bookDetail').innerHTML=empty('No se pudo cargar la ficha del libro.')}
+}
+function requestLoan(id){
+  if(session&&session.access){
+    if(isStaff(session)){note('Las cuentas de personal no solicitan préstamos en línea.');return}
+    location.href='panel-usuario.html?libro='+encodeURIComponent(id);return;
+  }
+  sessionStorage.setItem('uho_pending_book',id);
+  location.href='../../login.html';
+}
+$('bookList').addEventListener('click',e=>{const t=e.target.closest('[data-detail]');if(t)openBook(t.dataset.detail)});
+$('backToCatalog').addEventListener('click',showCatalog);
+$('bookDetail').addEventListener('click',e=>{
+  const tab=e.target.closest('[data-tab]');
+  if(tab){
+    document.querySelectorAll('#bookDetail .tab').forEach(t=>t.setAttribute('aria-selected','false'));
+    document.querySelectorAll('#bookDetail .tab-panel').forEach(p=>p.classList.remove('active'));
+    tab.setAttribute('aria-selected','true');$('tab-'+tab.dataset.tab).classList.add('active');return;
+  }
+  const btn=e.target.closest('[data-request]');if(btn)requestLoan(btn.dataset.request);
+});
+
+loadFilterOptions();loadBooks();
+</script>
 </body>
 </html>

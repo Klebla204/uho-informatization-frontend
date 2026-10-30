@@ -3,14 +3,15 @@
 .staff-layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 58px)}.staff-side{padding:18px 12px;color:#fff;background:var(--blue)}.staff-name{padding:4px 8px 18px;border-bottom:1px solid #ffffff26;font-size:13px;font-weight:700}.staff-name small{display:block;margin-top:4px;color:#c8d5e6;font-size:10px;font-weight:400}.staff-nav{display:grid;gap:5px;margin-top:14px}.staff-nav button{padding:10px;text-align:left;border:0;border-radius:7px;background:transparent;color:#e3ebf5;font:11px 'Sora',sans-serif;cursor:pointer}.staff-nav button:hover,.staff-nav button[aria-current=true]{background:#ffffff1c;color:white}.staff-count{float:right;padding:2px 6px;border-radius:20px;background:#dc2626;color:white;font-size:9px}.staff-content{padding:22px;min-width:0}.staff-section{display:none}.staff-section.active{display:block}.request-card{display:flex;gap:12px;align-items:flex-start;margin:10px 0;padding:15px}.request-icon{display:grid;width:44px;height:55px;flex:0 0 auto;place-items:center;border-radius:6px;background:var(--blue-soft);font-size:22px}.request-main{flex:1}.request-main h2{margin:0 0 4px;font-size:12px}.request-main p{margin:4px 0;color:var(--muted);font-size:10px}.request-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.form-group label{display:block;margin-bottom:5px;color:var(--ink-soft);font-size:10px;font-weight:700}.form-group.full{grid-column:1/-1}.loan-table{width:100%;border-collapse:collapse;font-size:11px}.loan-table th,.loan-table td{padding:11px;text-align:left;border-bottom:1px solid var(--line)}.loan-table th{color:var(--muted);font-size:9px;text-transform:uppercase}.filter-row{display:flex;gap:8px;align-items:center;margin:0 0 14px}.filter-row .input{max-width:300px}@media(max-width:720px){.staff-layout{grid-template-columns:1fr}.staff-side{padding:12px}.staff-name{padding-bottom:10px}.staff-nav{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.staff-content{padding:15px}.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.request-card{flex-wrap:wrap}}
 </style></head>
 <body class="page-shell"><header class="topbar"><a class="brand" href="#gestion">Biblio<span>UHO</span></a><span class="topbar-title">Gestión de biblioteca · Personal autorizado</span><button type="button" id="logout" style="margin-left:auto;padding:7px 14px;border:1px solid #dce4e7;border-radius:5px;background:#fff;color:#102a43;font:inherit;font-size:13px;cursor:pointer">Cerrar sesión</button></header>
-<div class="staff-layout"><aside class="staff-side"><div class="staff-name"><span id="staffName"></span><small id="staffRole"></small></div><nav class="staff-nav" aria-label="Funciones de biblioteca"><button type="button" data-staff="requests" aria-current="true">Solicitudes pendientes <span class="staff-count" id="pendingCount">0</span></button><button type="button" data-staff="counter">Préstamo presencial</button><button type="button" data-staff="active">Préstamos activos</button></nav></aside><main class="staff-content" id="gestion">
+<div class="staff-layout"><aside class="staff-side"><div class="staff-name"><span id="staffName"></span><small id="staffRole"></small></div><nav class="staff-nav" aria-label="Funciones de biblioteca"><button type="button" data-staff="requests" aria-current="true">Solicitudes pendientes <span class="staff-count" id="pendingCount">0</span></button><button type="button" data-staff="counter">Préstamo presencial</button><button type="button" data-staff="active">Préstamos activos</button><button type="button" data-staff="due">Vencimientos <span class="staff-count" id="dueCount">0</span></button></nav></aside><main class="staff-content" id="gestion">
 <section id="staff-requests" class="staff-section active"><h1 class="page-heading">Solicitudes pendientes</h1><p class="page-lead">Revisa y gestiona las solicitudes recibidas.</p><div id="requestList"></div><p id="emptyRequests" class="empty-state panel" hidden>No quedan solicitudes pendientes.</p></section>
-<section id="staff-counter" class="staff-section"><h1 class="page-heading">Nuevo préstamo presencial</h1><p class="page-lead">Registra la entrega de un ejemplar en el mostrador.</p><form id="counterForm" class="panel form-grid"><div class="form-group"><label for="userSearch">Usuario (nombre de usuario)</label><input id="userSearch" class="input" required placeholder="Ej. estudiante1"></div><div class="form-group"><label for="bookSelect">Libro</label><input id="bookSelect" class="input" list="bookOptions" required autocomplete="off" placeholder="Escribe el título, autor o ISBN"><datalist id="bookOptions"></datalist></div><div class="form-group"><label for="librarySelect">Biblioteca</label><select id="librarySelect" class="select" required></select></div><div class="form-group"><label for="dueDate">Fecha de devolución</label><input id="dueDate" class="input" type="date" required></div><div class="form-group full"><label for="notes">Observaciones</label><input id="notes" class="input" placeholder="Opcional"></div><div class="form-group full"><button class="button" type="submit">Registrar préstamo</button></div></form></section>
+<section id="staff-counter" class="staff-section"><h1 class="page-heading">Nuevo préstamo presencial</h1><p class="page-lead">Registra la entrega de un ejemplar en el mostrador.</p><form id="counterForm" class="panel form-grid"><div class="form-group"><label for="userSearch">Usuario (escanea el QR del carnet o escribe CI / usuario)</label><input id="userSearch" class="input" required autocomplete="off" autofocus placeholder="Escanea el QR o escribe CI, usuario o nombre"></div><div class="form-group"><label for="bookSelect">Libro</label><input id="bookSelect" class="input" list="bookOptions" required autocomplete="off" placeholder="Escribe el título, autor o ISBN"><datalist id="bookOptions"></datalist></div><div class="form-group"><label for="librarySelect">Biblioteca</label><select id="librarySelect" class="select" required></select></div><div class="form-group"><label for="dueDate">Fecha de devolución</label><input id="dueDate" class="input" type="date" required></div><div class="form-group full"><label for="notes">Observaciones</label><input id="notes" class="input" placeholder="Opcional"></div><div class="form-group full"><button class="button" type="submit">Registrar préstamo</button></div></form></section>
+<section id="staff-due" class="staff-section"><h1 class="page-heading">Vencimientos</h1><p class="page-lead">Préstamos que vencen en los próximos 3 días y préstamos ya vencidos.</p><h2>Vencidos</h2><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Acción</th></tr></thead><tbody id="overdueRows"></tbody></table></div><h2 style="margin-top:20px">Próximos a vencer</h2><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Acción</th></tr></thead><tbody id="upcomingRows"></tbody></table></div></section>
 <section id="staff-active" class="staff-section"><h1 class="page-heading">Préstamos activos</h1><p class="page-lead">Consulta préstamos y fechas de devolución.</p><div class="filter-row"><input id="loanFilter" class="input" type="search" placeholder="Buscar usuario, título o ejemplar"></div><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="activeRows"></tbody></table></div></section>
 </main></div><div id="toast" class="toast" role="status" hidden></div>
 <script>
 (()=>{let s=null;try{s=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}const staff=s&&(['BIBLIOTECARIO','ADMINISTRADOR','SUPER_ADMIN'].includes(s.tipo_usuario)||s.is_staff);if(!s||!s.access)location.replace('../../login.html');else if(!staff)location.replace('panel-usuario.html')})();
-document.getElementById('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');location.href='../../login.html'});
+document.getElementById('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');location.href='catalogo.html'});
 const sectionButtons=[...document.querySelectorAll('[data-staff]')];sectionButtons.forEach(button=>button.addEventListener('click',()=>{sectionButtons.forEach(item=>item.removeAttribute('aria-current'));button.setAttribute('aria-current','true');document.querySelectorAll('.staff-section').forEach(section=>section.classList.remove('active'));document.getElementById(`staff-${button.dataset.staff}`).classList.add('active')}));const toast=document.getElementById('toast');let timer;function notify(message){toast.textContent=message;toast.hidden=false;clearTimeout(timer);timer=setTimeout(()=>toast.hidden=true,2600)}
 (()=>{
 const API='http://localhost:8000';
@@ -20,8 +21,14 @@ const $=id=>document.getElementById(id);
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=d=>d?new Date(d).toLocaleDateString('es'):'';
 const inDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return d};
-const ST={APROBADO:['Aprobado','good'],LISTO:['Listo para recoger','warn'],ACTIVO:['Activo','good'],VENCIDO:['Vencido','bad']};
-const NEXT={APROBADO:['listo','Marcar listo'],LISTO:['recoger','Registrar entrega'],ACTIVO:['devolver','Registrar devolución'],VENCIDO:['devolver','Registrar devolución']};
+const ST={ACTIVO:['Activo','good'],VENCIDO:['Vencido','bad']};
+const NEXT={ACTIVO:['devolver','Registrar devolución'],VENCIDO:['devolver','Registrar devolución']};
+const REQUEST_ACTIONS={
+  PENDIENTE:[['aprobar','Aprobar',''],['rechazar','Rechazar','danger']],
+  APROBADO:[['listo','Marcar listo','']],
+  LISTO:[['recoger','Registrar entrega','']]
+};
+const REQUEST_LABEL={PENDIENTE:['Pendiente',''],APROBADO:['Aprobada','good'],LISTO:['Lista para recoger','warn']};
 
 $('staffName').textContent=[session.nombre,session.apellidos].filter(Boolean).join(' ')||session.username;
 $('staffRole').textContent=(session.tipo_usuario||'').charAt(0)+(session.tipo_usuario||'').slice(1).toLowerCase().replace('_',' ');
@@ -42,37 +49,47 @@ const errorOf=async(r,fallback)=>{const d=await r.json().catch(()=>({}));return 
 
 async function loadPending(){
   try{
-    const loans=await list('/api/v1/prestamos/pendientes/');
-    $('requestList').innerHTML=loans.map(l=>`<article class="request-card panel"><div class="request-icon">📘</div><div class="request-main"><h2>${esc(l.libro_titulo)}</h2><p>${esc(l.usuario_nombre)} · ${esc(l.usuario_tipo)}</p><p>${esc(l.biblioteca_nombre)} · Ejemplar ${esc(l.codigo_ejemplar)} · Devolución pactada ${fmt(l.fecha_devolucion_pactada)}</p><div class="request-actions"><button class="button approve" type="button" data-id="${esc(l.id)}">Aprobar</button><button class="button danger reject" type="button" data-id="${esc(l.id)}">Rechazar</button></div></div></article>`).join('');
+    const loans=await list('/api/v1/prestamos/solicitudes/');
+    $('requestList').innerHTML=loans.map(l=>{const [label,cls]=REQUEST_LABEL[l.estado]||[l.estado,''];const buttons=(REQUEST_ACTIONS[l.estado]||[]).map(([a,t,c])=>`<button class="button ${c}" type="button" data-id="${esc(l.id)}" data-action="${a}">${t}</button>`).join('');return `<article class="request-card panel"><div class="request-icon">📘</div><div class="request-main"><h2>${esc(l.libro_titulo)} <span class="status ${cls}">${label}</span></h2><p>${esc(l.usuario_nombre)} · ${esc(l.usuario_tipo)}</p><p>${esc(l.biblioteca_nombre)} · Ejemplar ${esc(l.codigo_ejemplar)} · Devolución pactada ${fmt(l.fecha_devolucion_pactada)}</p><div class="request-actions">${buttons}</div></div></article>`}).join('');
     $('pendingCount').textContent=loans.length;$('emptyRequests').hidden=loans.length>0;
   }catch{notify('No se pudieron cargar las solicitudes.')}
+}
+async function loadDue(){
+  try{
+    const r=await api('/api/v1/prestamos/vencimientos/');if(!r.ok)throw 0;
+    const d=await r.json();
+    const row=l=>`<tr><td>${esc(l.libro_titulo)}</td><td>${esc(l.usuario_nombre)}</td><td>${esc(l.codigo_ejemplar)}</td><td>${fmt(l.fecha_devolucion_pactada)} <span class="status ${l.vencido?'bad':'warn'}">${l.vencido?'Vencido':l.dias_restantes===0?'Vence hoy':'En '+l.dias_restantes+' día(s)'}</span></td><td><button class="button secondary" type="button" data-id="${esc(l.id)}" data-action="devolver">Registrar devolución</button></td></tr>`;
+    $('overdueRows').innerHTML=d.vencidos.map(row).join('')||'<tr><td colspan="5">No hay préstamos vencidos.</td></tr>';
+    $('upcomingRows').innerHTML=d.proximos.map(row).join('')||'<tr><td colspan="5">No hay préstamos próximos a vencer.</td></tr>';
+    $('dueCount').textContent=d.vencidos.length+d.proximos.length;
+  }catch{notify('No se pudieron cargar los vencimientos.')}
 }
 async function loadActive(){
   try{
     const loans=await list('/api/v1/prestamos/en-curso/');
-    $('activeRows').innerHTML=loans.map(l=>{const [label,cls]=ST[l.estado]||[l.estado,''];const next=NEXT[l.estado];return `<tr><td>${esc(l.libro_titulo)}</td><td>${esc(l.usuario_nombre)}</td><td>${esc(l.codigo_ejemplar)}</td><td>${fmt(l.fecha_devolucion_pactada)}</td><td><span class="status ${cls}">${label}</span></td><td>${next?`<button class="button secondary" type="button" data-id="${esc(l.id)}" data-action="${next[0]}">${next[1]}</button>`:''}</td></tr>`}).join('')||'<tr><td colspan="6">No hay préstamos en curso.</td></tr>';
+    $('activeRows').innerHTML=loans.map(l=>{const [label,cls]=l.vencido?['Vencido','bad']:(ST[l.estado]||[l.estado,'']);const next=NEXT[l.estado];return `<tr><td>${esc(l.libro_titulo)}</td><td>${esc(l.usuario_nombre)}</td><td>${esc(l.codigo_ejemplar)}</td><td>${fmt(l.fecha_devolucion_pactada)}</td><td><span class="status ${cls}">${label}</span></td><td>${next?`<button class="button secondary" type="button" data-id="${esc(l.id)}" data-action="${next[0]}">${next[1]}</button>`:''}</td></tr>`}).join('')||'<tr><td colspan="6">No hay préstamos en curso.</td></tr>';
   }catch{notify('No se pudieron cargar los préstamos.')}
 }
-const refresh=()=>Promise.all([loadPending(),loadActive()]);
+const refresh=()=>Promise.all([loadPending(),loadActive(),loadDue()]);
 
 $('requestList').addEventListener('click',async e=>{
-  const btn=e.target.closest('.approve,.reject');if(!btn)return;
-  const approve=btn.classList.contains('approve');
+  const btn=e.target.closest('[data-action]');if(!btn)return;
+  const action=btn.dataset.action;
   let body={};
-  if(!approve){const motivo=prompt('Motivo del rechazo:');if(!motivo||!motivo.trim())return;body={motivo:motivo.trim()}}
+  if(action==='rechazar'){const motivo=prompt('Motivo del rechazo:');if(!motivo||!motivo.trim())return;body={motivo:motivo.trim()}}
+  if(action==='listo')body={fecha_recogida_limite:inDays(3).toISOString()};
   btn.disabled=true;
-  const r=await post(`/api/v1/prestamos/${btn.dataset.id}/${approve?'aprobar':'rechazar'}/`,body);
-  if(r.ok){notify(approve?'Solicitud aprobada.':'Solicitud rechazada.');await refresh()}
+  const r=await post(`/api/v1/prestamos/${btn.dataset.id}/${action}/`,body);
+  if(r.ok){notify({aprobar:'Solicitud aprobada.',rechazar:'Solicitud rechazada.',listo:'Marcada como lista para recoger.',recoger:'Entrega registrada. El préstamo pasa a activos.'}[action]);await refresh()}
   else{notify(await errorOf(r,'No se pudo completar la acción.'));btn.disabled=false}
 });
-$('activeRows').addEventListener('click',async e=>{
+['activeRows','overdueRows','upcomingRows'].forEach(id=>$(id).addEventListener('click',async e=>{
   const btn=e.target.closest('[data-action]');if(!btn)return;
   btn.disabled=true;
-  const body=btn.dataset.action==='listo'?{fecha_recogida_limite:inDays(3).toISOString()}:{};
-  const r=await post(`/api/v1/prestamos/${btn.dataset.id}/${btn.dataset.action}/`,body);
-  if(r.ok){notify('Estado actualizado.');await refresh()}
+  const r=await post(`/api/v1/prestamos/${btn.dataset.id}/${btn.dataset.action}/`,{});
+  if(r.ok){notify('Devolución registrada.');await refresh()}
   else{notify(await errorOf(r,'No se pudo completar la acción.'));btn.disabled=false}
-});
+}));
 $('loanFilter').addEventListener('input',e=>{const q=e.target.value.toLocaleLowerCase('es');document.querySelectorAll('#activeRows tr').forEach(row=>row.hidden=!row.textContent.toLocaleLowerCase('es').includes(q))});
 
 const bookByLabel=new Map();
@@ -96,8 +113,8 @@ $('counterForm').addEventListener('submit',async e=>{
   const uid=$('userSearch').value.trim();
   try{
     const users=await list('/api/v1/prestamos/usuarios/?q='+encodeURIComponent(uid));
-    const user=users.find(u=>u.auth_uid.toLowerCase()===uid.toLowerCase());
-    if(!user){notify('No existe un usuario activo con ese nombre de usuario.');return}
+    const user=users.find(u=>u.auth_uid.toLowerCase()===uid.toLowerCase())||(users.length===1?users[0]:null);
+    if(!user){notify(users.length>1?'Hay varios usuarios con ese dato. Escribe el usuario exacto, el CI o escanea el QR.':'No existe un usuario activo con ese dato.');return}
     const bookId=bookByLabel.get($('bookSelect').value.trim());
     if(!bookId){notify('Elige un libro de la lista de sugerencias.');return}
     const r=await post('/api/v1/prestamos/presencial/',{usuario:user.id,libro:bookId,biblioteca:$('librarySelect').value,fecha_devolucion_pactada:new Date($('dueDate').value+'T23:59:00').toISOString(),observaciones:$('notes').value});
