@@ -21,6 +21,8 @@ Incluye:
 	- `pages/` — páginas principales por módulo
 	- `services/` — clientes API (axios) y lógica de integración
 	- `components/` — componentes reutilizables
+- `plantillas/` — páginas HTML autónomas por sección. Cada archivo contiene su propio marcado, estilos específicos y JavaScript; solamente comparten `shared.css`. No cargan el mockup completo ni enlazan a otras plantillas. `plantillas/index.html` es un directorio opcional para abrir cada archivo.
+- `Sistema Integrado de Gestión de Préstamos Bibliotecarios (BiblioUHO)_Mockup_Interactivo.html` — mockup completo original
 
 ## Autenticación y Autorización
 - Uso de JWT (token almacenado de forma segura — preferentemente httpOnly cookies o almacenamiento seguro).
@@ -60,6 +62,9 @@ npm test
 
 ## Design tokens y estilos
 - TailwindCSS está configurado; modifica `tailwind.config.js` para añadir variables y temas compartidos.
+
+## Plantillas HTML independientes
+Las páginas de `plantillas/` pueden abrirse individualmente. Catálogo, ficha, usuario, carnet, bibliotecario y reportes incluyen su propio HTML y JavaScript; las interacciones locales son demostrativas y no están conectadas al backend. El único recurso compartido entre páginas es `shared.css`.
 
 ## Roadmap
 

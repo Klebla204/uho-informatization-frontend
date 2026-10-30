@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel del usuario | BiblioUHO</title><link rel="stylesheet" href="shared.css"><style>
+.user-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 58px)}.user-side{padding:20px 12px;background:#fff;border-right:1px solid var(--line)}.user-identity{padding:4px 8px 18px;border-bottom:1px solid var(--line)}.avatar{display:grid;width:42px;height:42px;place-items:center;margin-bottom:8px;border-radius:50%;background:var(--blue);color:white;font-weight:700}.user-name{font-size:12px;font-weight:700}.user-role{margin-top:4px;color:var(--muted);font-size:10px}.user-menu{display:grid;gap:5px;margin-top:14px}.user-menu button{padding:10px;text-align:left;border:0;border-radius:7px;background:transparent;color:var(--ink-soft);font:12px 'Sora',sans-serif;cursor:pointer}.user-menu button:hover,.user-menu button[aria-current=true]{background:var(--blue-soft);color:var(--blue)}.content{padding:24px;min-width:0}.user-section{display:none}.user-section.active{display:block}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.kpi{padding:15px;background:#fff;border:1px solid var(--line);border-radius:8px}.kpi strong{display:block;font-size:23px;color:var(--blue)}.kpi span{font-size:10px;color:var(--muted)}.loan-row{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line)}.loan-row:last-child{border-bottom:0}.loan-icon{display:grid;width:42px;height:54px;flex:0 0 auto;place-items:center;border-radius:6px;background:var(--blue-soft);font-size:21px}.loan-info{flex:1}.loan-info strong{display:block;font-size:12px}.loan-info small{display:block;margin-top:4px;color:var(--muted);font-size:10px}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.profile-field{padding:12px;background:#fff;border:1px solid var(--line);border-radius:7px}.profile-field label{display:block;margin-bottom:5px;color:var(--muted);font-size:9px;font-weight:700}.profile-field span{font-size:12px;font-weight:600}@media(max-width:700px){.user-layout{grid-template-columns:1fr}.user-side{border-right:0;border-bottom:1px solid var(--line)}.user-identity{display:flex;align-items:center;gap:10px}.avatar{margin:0}.user-menu{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}.content{padding:16px}.kpis{grid-template-columns:repeat(2,1fr)}}
+.detail-layout{display:grid;grid-template-columns:260px 1fr;gap:28px}.cover{display:grid;height:320px;place-items:center;overflow:hidden;border-radius:10px;background:linear-gradient(135deg,#1a3a6b,#22509a);font-size:76px;box-shadow:var(--shadow)}.cover img{width:100%;height:100%;object-fit:cover}.availability{margin-top:14px}.availability h2{margin:0 0 10px;font-size:12px;text-transform:uppercase;color:var(--muted)}.availability-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:11px}.availability-row:last-child{border:0}.book-meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;color:var(--ink-soft);font-size:12px}.isbn{color:var(--muted);font:12px monospace}.tags{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.tag{padding:4px 10px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-size:10px}.tabs{display:flex;gap:5px;margin-top:18px;border-bottom:1px solid var(--line)}.tab{padding:9px 12px;border:0;border-bottom:2px solid transparent;background:none;color:var(--muted);font:12px 'Sora',sans-serif;cursor:pointer}.tab[aria-selected=true]{border-color:var(--blue);color:var(--blue);font-weight:700}.tab-panel{display:none;padding:15px 0;color:var(--ink-soft);font-size:13px;line-height:1.7}.tab-panel.active{display:block}.book-link{cursor:pointer}.book-link:hover{color:var(--blue)}.catalog-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}.catalog-toolbar>.input{flex:1 1 240px;width:auto}.catalog-toolbar .select{flex:0 1 190px;width:auto}.check{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink-soft)}.view-toggle{display:flex;gap:4px}.view-toggle .button[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#fff}.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}.chip{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border:0;border-radius:999px;background:var(--blue-soft);color:var(--blue);font:600 11px 'Sora',sans-serif;cursor:pointer}.chip.clear{background:#fff;border:1px solid var(--line);color:var(--muted)}.book-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}.book-grid.as-list{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 16px}.book-card{display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:10px;transition:transform .15s,box-shadow .15s}.book-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}.card-cover{position:relative;display:grid;height:150px;place-items:center;overflow:hidden;color:#fff;font:800 46px 'Sora',sans-serif;cursor:pointer}.card-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.card-badge{position:absolute;top:8px;right:8px;background:#fff}.card-body{display:flex;flex-direction:column;gap:5px;flex:1;padding:12px}.card-title{font-size:13px;font-weight:700;cursor:pointer}.card-title:hover{color:var(--blue)}.card-author{font-size:11px;color:var(--muted)}.card-action{display:flex;gap:6px;margin-top:auto;padding-top:8px}.card-action .input{min-height:34px;padding:5px 8px;font-size:11px;flex:1;min-width:0}.card-action .button{min-height:34px;padding:5px 10px}.skeleton{height:270px;border-radius:10px;background:linear-gradient(90deg,#eef2f4 25%,#f7f9fa 50%,#eef2f4 75%);background-size:200% 100%;animation:sk 1.2s infinite}@keyframes sk{to{background-position:-200% 0}}@media(max-width:720px){.detail-layout{grid-template-columns:1fr}.cover{height:230px}}
+</style></head>
+<body class="page-shell"><header class="topbar"><a class="brand" href="#usuario">Biblio<span>UHO</span></a><span class="topbar-title">Área personal del usuario</span><button type="button" id="logout" style="margin-left:auto;padding:7px 14px;border:1px solid #dce4e7;border-radius:5px;background:#fff;color:#102a43;font:inherit;font-size:13px;cursor:pointer">Cerrar sesión</button></header>
+<div class="user-layout"><aside class="user-side"><div class="user-identity"><div class="avatar" id="avatar"></div><div><div class="user-name" id="userName"></div><div class="user-role" id="userRole"></div></div></div><nav class="user-menu" aria-label="Secciones personales"><button type="button" data-section="home">Inicio</button><button type="button" data-section="loans" aria-current="true">Mis préstamos</button><button type="button" data-section="catalog">Catálogo</button><button type="button" data-section="requests">Mis solicitudes</button><button type="button" data-section="profile">Mi perfil</button><button type="button" data-section="card">Mi carnet QR</button></nav></aside>
+<main class="content" id="usuario">
+<section id="section-home" class="user-section"><h1 class="page-heading">Bienvenido, <span id="welcomeName"></span></h1><p class="page-lead">Resumen de tu actividad bibliotecaria</p><div class="panel"><h2>Tu cuenta está activa</h2><p class="page-lead" id="homeSummary">Desde este panel puedes consultar tus préstamos, solicitudes, perfil y carnet.</p></div></section>
+<section id="section-loans" class="user-section active"><h1 class="page-heading">Mis préstamos</h1><p class="page-lead">Consulta préstamos activos y fechas de devolución.</p><div class="kpis"><div class="kpi"><strong id="kActive">0</strong><span>Activos</span></div><div class="kpi"><strong id="kPending">0</strong><span>Pendientes</span></div><div class="kpi"><strong id="kOverdue">0</strong><span>Vencidos</span></div><div class="kpi"><strong id="kHistory">0</strong><span>En el historial</span></div></div><div class="panel" id="loanList"></div></section>
+<section id="section-catalog" class="user-section"><h1 class="page-heading">Catálogo</h1><p class="page-lead">Busca un libro y solicita su préstamo.</p><div class="catalog-toolbar"><input class="input" id="bookSearch" placeholder="Buscar por título, autor o ISBN" aria-label="Buscar libros"><select class="select" id="categoryFilter" aria-label="Categoría"><option value="">Todas las categorías</option></select><select class="select" id="libraryFilter" aria-label="Biblioteca"><option value="">Todas las bibliotecas</option></select><label class="check"><input type="checkbox" id="availableOnly"> Solo disponibles</label><div class="view-toggle"><button type="button" class="button secondary" id="viewGrid" aria-pressed="true">Cuadrícula</button><button type="button" class="button secondary" id="viewList" aria-pressed="false">Lista</button></div></div><div class="chips" id="activeFilters"></div><p class="page-lead" id="bookCount"></p><div id="bookList" class="book-grid"></div></section>
+<section id="section-book" class="user-section"><p><button class="button secondary" id="backToCatalog" type="button">← Volver al catálogo</button></p><div id="bookDetail"></div></section>
+<section id="section-requests" class="user-section"><h1 class="page-heading">Mis solicitudes</h1><p class="page-lead">Estado de tus solicitudes de préstamo.</p><div class="panel" id="requestList"></div></section>
+<section id="section-profile" class="user-section"><h1 class="page-heading">Mi perfil</h1><p class="page-lead">Información asociada a tu cuenta institucional.</p><div class="profile-grid" id="profileGrid"></div><p style="margin-top:16px"><button class="button" id="saveProfile" type="button">Guardar cambios</button></p></section>
+<section id="section-card" class="user-section"><h1 class="page-heading">Mi carnet</h1><p class="page-lead">Identificación de usuario para atención presencial.</p><div class="panel" style="max-width:620px" id="cardBox"></div></section>
+</main></div><div id="toast" class="toast" role="status" hidden></div>
+<script>
+(()=>{let s=null;try{s=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}if(!s||!s.access)location.replace('../../login.html')})();
+document.getElementById('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');location.href='../../login.html'});
+const buttons=[...document.querySelectorAll('[data-section]')];buttons.forEach(button=>button.addEventListener('click',()=>{buttons.forEach(item=>item.removeAttribute('aria-current'));button.setAttribute('aria-current','true');document.querySelectorAll('.user-section').forEach(section=>section.classList.remove('active'));document.getElementById(`section-${button.dataset.section}`).classList.add('active')}));const toast=document.getElementById('toast');
+</script>
+<script>
+(()=>{
+const API='http://localhost:8000';
+let session=null;try{session=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}
+if(!session||!session.access)return;
+const $=id=>document.getElementById(id);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=d=>d?new Date(d).toLocaleDateString('es'):'';
+const note=m=>{toast.textContent=m;toast.hidden=false;setTimeout(()=>toast.hidden=true,3000)};
+const ST={PENDIENTE:['Pendiente',''],APROBADO:['Aprobado','good'],LISTO:['Listo para recoger','warn'],ACTIVO:['Activo','good'],DEVUELTO:['Devuelto','good'],VENCIDO:['Vencido','bad'],RECHAZADO:['Rechazado','bad'],CANCELADO:['Cancelado','bad']};
+const ROLES={ESTUDIANTE:'Estudiante',TRABAJADOR:'Trabajador'};
+
+const full=[session.nombre,session.apellidos].filter(Boolean).join(' ')||session.username;
+$('userName').textContent=full;$('userRole').textContent=ROLES[session.tipo_usuario]||session.tipo_usuario||'';
+$('avatar').textContent=(full.match(/\b\p{L}/gu)||[]).slice(0,2).join('').toUpperCase();
+$('welcomeName').textContent=session.nombre||session.username;
+
+async function api(path,opts={}){
+  const send=()=>fetch(API+path,{...opts,headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access}});
+  let r=await send();
+  if(r.status===401&&session.refresh){
+    const rr=await fetch(API+'/api/token/refresh/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh:session.refresh})});
+    if(rr.ok){session.access=(await rr.json()).access;sessionStorage.setItem('uho_auth',JSON.stringify(session));r=await send()}
+  }
+  if(r.status===401){sessionStorage.removeItem('uho_auth');location.replace('../../login.html')}
+  return r;
+}
+const list=async p=>{const r=await api(p);if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();return Array.isArray(d)?d:d.results||[]};
+
+function loanRow(l){
+  const [label,cls]=ST[l.estado]||[l.estado,''];
+  const when=l.estado==='LISTO'&&l.fecha_recogida_limite?'Recoger antes del '+fmt(l.fecha_recogida_limite):l.estado==='DEVUELTO'?'Devuelto el '+fmt(l.fecha_devolucion_real):'Devolver antes del '+fmt(l.fecha_devolucion_pactada);
+  return `<div class="loan-row"><span class="loan-icon">📘</span><div class="loan-info"><strong>${esc(l.libro_titulo)}</strong><small>${esc(l.biblioteca_nombre)} · Ejemplar ${esc(l.codigo_ejemplar)} · Solicitado el ${fmt(l.fecha_solicitud)} · ${when}</small></div><span class="status ${cls}">${label}</span></div>`;
+}
+const empty=t=>`<p class="page-lead" style="padding:14px 0">${t}</p>`;
+
+async function loadLoans(){
+  try{
+    const loans=await list('/api/v1/prestamos/mis-prestamos/');
+    const count=s=>loans.filter(l=>l.estado===s).length;
+    const inProgress=['APROBADO','LISTO','ACTIVO'].reduce((n,s)=>n+count(s),0);
+    $('kActive').textContent=inProgress;$('kPending').textContent=count('PENDIENTE');$('kOverdue').textContent=count('VENCIDO');$('kHistory').textContent=count('DEVUELTO');
+    $('homeSummary').textContent=`Tienes ${inProgress} pr\u00e9stamo(s) activo(s), ${count('PENDIENTE')} solicitud(es) pendiente(s) y ${count('VENCIDO')} vencido(s).`;
+    const current=loans.filter(l=>['APROBADO','LISTO','ACTIVO','VENCIDO'].includes(l.estado));
+    const others=loans.filter(l=>!['APROBADO','LISTO','ACTIVO','VENCIDO'].includes(l.estado));
+    $('loanList').innerHTML=current.map(loanRow).join('')||empty('No tienes préstamos en curso.');
+    $('requestList').innerHTML=others.map(loanRow).join('')||empty('No hay solicitudes.');
+  }catch{$('loanList').innerHTML=empty('No se pudieron cargar tus préstamos.')}
+}
+
+const defaultDue=()=>{const d=new Date();d.setDate(d.getDate()+14);return d.toISOString().slice(0,10)};
+function bookRow(b){
+  const authors=(b.autores||[]).map(a=>`${a.nombre} ${a.apellidos}`.trim()).join(', ');
+  const avail=b.ejemplares_disponibles||0;
+  const action=avail>0?`<input type="date" class="input" style="width:150px" value="${defaultDue()}" aria-label="Fecha de devolución"> <button type="button" class="button" data-book="${esc(b.id)}">Solicitar</button>`:'<span class="status bad">No disponible</span>';
+  return `<div class="loan-row"><span class="loan-icon book-link" data-detail="${esc(b.id)}">📘</span><div class="loan-info"><strong class="book-link" data-detail="${esc(b.id)}">${esc(b.titulo)}</strong><small>${esc(authors)} · ${avail} de ${b.ejemplares_totales||0} disponibles</small></div>${action}</div>`;
+}
+const GRADIENTS=['#1a3a6b,#22509a','#1d4d67,#36746f','#4a3a6b,#6b5aa8','#6b3a3a,#a85a5a','#3a5a3a,#5a9a6a'];
+function bookCard(b){
+  const authors=(b.autores||[]).map(a=>`${a.nombre} ${a.apellidos}`.trim()).join(', ');
+  const avail=b.ejemplares_disponibles||0;
+  const grad=GRADIENTS[(b.titulo||'').length%GRADIENTS.length];
+  const cat=(b.categorias||[])[0];
+  const badge=avail>0?`<span class="status good card-badge">${avail} disp.</span>`:'<span class="status bad card-badge">Agotado</span>';
+  const action=avail>0?`<div class="card-action"><input type="date" class="input" value="${defaultDue()}" aria-label="Fecha de devolución"><button type="button" class="button" data-book="${esc(b.id)}">Solicitar</button></div>`:'';
+  return `<article class="book-card"><div class="card-cover" data-detail="${esc(b.id)}" style="background:linear-gradient(135deg,${grad})">${esc((b.titulo||'?').charAt(0).toUpperCase())}${b.portada_url?`<img src="${esc(b.portada_url)}" alt="" loading="lazy">`:''}${badge}</div><div class="card-body">${cat?`<span class="tag" style="align-self:flex-start">${esc(cat.nombre)}</span>`:''}<div class="card-title" data-detail="${esc(b.id)}">${esc(b.titulo)}</div><div class="card-author">${esc(authors)}</div>${action}</div></article>`;
+}
+const filters={q:'',cat:'',lib:'',avail:false};
+let view='grid';
+async function loadFilterOptions(){
+  try{
+    const [cats,libs]=await Promise.all([list('/api/v1/categorias/'),list('/api/v1/bibliotecas/')]);
+    $('categoryFilter').innerHTML+=cats.map(c=>`<option value="${esc(c.id)}">${esc(c.nombre)}</option>`).join('');
+    $('libraryFilter').innerHTML+=libs.map(l=>`<option value="${esc(l.id)}">${esc(l.nombre)}</option>`).join('');
+  }catch{note('No se pudieron cargar los filtros.')}
+}
+function renderChips(){
+  const sel=(id)=>{const s=$(id);return s.options[s.selectedIndex].text};
+  const chips=[];
+  if(filters.q)chips.push(['q','Texto: '+filters.q]);
+  if(filters.cat)chips.push(['cat',sel('categoryFilter')]);
+  if(filters.lib)chips.push(['lib',sel('libraryFilter')]);
+  if(filters.avail)chips.push(['avail','Solo disponibles']);
+  $('activeFilters').innerHTML=chips.map(([k,t])=>`<button type="button" class="chip" data-clear="${k}">${esc(t)} ×</button>`).join('')+(chips.length>1?'<button type="button" class="chip clear" data-clear="all">Limpiar filtros</button>':'');
+}
+function syncControls(){
+  $('bookSearch').value=filters.q;$('categoryFilter').value=filters.cat;$('libraryFilter').value=filters.lib;$('availableOnly').checked=filters.avail;
+}
+async function loadBooks(){
+  renderChips();
+  $('bookList').className=view==='grid'?'book-grid':'book-grid as-list';
+  $('bookList').innerHTML=view==='grid'?'<div class="skeleton"></div>'.repeat(6):'';
+  const params=new URLSearchParams();
+  if(filters.q)params.set('q',filters.q);
+  if(filters.cat)params.set('categoria',filters.cat);
+  if(filters.lib)params.set('biblioteca',filters.lib);
+  if(filters.avail)params.set('disponibilidad','disponible');
+  const qs=params.toString();
+  try{
+    const books=await list('/api/v1/libros/'+(qs?'?'+qs:''));
+    $('bookCount').textContent=books.length===1?'1 libro':`${books.length} libros`;
+    $('bookList').innerHTML=books.map(view==='grid'?bookCard:bookRow).join('')||`<div style="grid-column:1/-1">${empty('No se encontraron libros con esos filtros.')}</div>`;
+  }catch{$('bookCount').textContent='';$('bookList').innerHTML=empty('No se pudo cargar el catálogo.')}
+}
+let timer;$('bookSearch').addEventListener('input',e=>{filters.q=e.target.value.trim();clearTimeout(timer);timer=setTimeout(loadBooks,300)});
+$('categoryFilter').addEventListener('change',e=>{filters.cat=e.target.value;loadBooks()});
+$('libraryFilter').addEventListener('change',e=>{filters.lib=e.target.value;loadBooks()});
+$('availableOnly').addEventListener('change',e=>{filters.avail=e.target.checked;loadBooks()});
+$('activeFilters').addEventListener('click',e=>{
+  const c=e.target.closest('[data-clear]');if(!c)return;
+  if(c.dataset.clear==='all'){Object.assign(filters,{q:'',cat:'',lib:'',avail:false})}
+  else filters[c.dataset.clear]=c.dataset.clear==='avail'?false:'';
+  syncControls();loadBooks();
+});
+for(const [id,mode] of [['viewGrid','grid'],['viewList','list']])$(id).addEventListener('click',()=>{view=mode;$('viewGrid').setAttribute('aria-pressed',mode==='grid');$('viewList').setAttribute('aria-pressed',mode==='list');loadBooks()});
+$('bookList').addEventListener('click',async e=>{
+  const btn=e.target.closest('[data-book]');if(!btn)return;
+  const date=btn.parentElement.querySelector('input[type=date]').value;
+  if(!date){note('Elige una fecha de devolución.');return}
+  btn.disabled=true;
+  const r=await api('/api/v1/prestamos/solicitar/',{method:'POST',body:JSON.stringify({libro:btn.dataset.book,fecha_devolucion_pactada:new Date(date+'T23:59:00').toISOString()})});
+  if(r.ok){note('Solicitud enviada. Queda pendiente de aprobación.');await Promise.all([loadLoans(),loadBooks()])}
+  else{const d=await r.json().catch(()=>({}));note(d.detail||'No se pudo enviar la solicitud.');btn.disabled=false}
+});
+function showSection(name){
+  document.querySelectorAll('.user-section').forEach(s=>s.classList.remove('active'));
+  $('section-'+name).classList.add('active');
+  document.querySelectorAll('[data-section]').forEach(b=>b.removeAttribute('aria-current'));
+  const nav=document.querySelector(`[data-section=\"${name==='book'?'catalog':name}\"]`);if(nav)nav.setAttribute('aria-current','true');
+}
+async function openBook(id){
+  showSection('book');
+  $('bookDetail').innerHTML=empty('Cargando ficha\u2026');
+  try{
+    const r=await api('/api/v1/libros/'+encodeURIComponent(id)+'/');if(!r.ok)throw 0;
+    const b=await r.json();
+    const byLibrary={};
+    (b.ejemplares||[]).forEach(e=>{const l=byLibrary[e.biblioteca_nombre]||(byLibrary[e.biblioteca_nombre]={total:0,free:0});l.total++;if(e.disponible)l.free++});
+    const rows=Object.entries(byLibrary).map(([name,l])=>`<div class=\"availability-row\"><span>${esc(name)}</span><span class=\"status ${l.free?'good':'bad'}\">${l.free?l.free+(l.free===1?' disponible':' disponibles'):'No disponible'}</span></div>`).join('')||empty('Sin ejemplares registrados.');
+    const free=Object.values(byLibrary).reduce((n,l)=>n+l.free,0);
+    const authors=(b.autores||[]).map(a=>`${a.nombre} ${a.apellidos}`.trim()).join(', ');
+    const edition=[b.edicion,b.anio_edicion].filter(Boolean).join(' \u00b7 ');
+    const tags=(b.categorias||[]).map(c=>`<span class=\"tag\">${esc(c.nombre)}</span>`).join('');
+    const cover=b.portada_url?`<img src=\"${esc(b.portada_url)}\" alt=\"Portada de ${esc(b.titulo)}\">`:'\ud83d\udcd8';
+    const action=free>0?`<p><input type=\"date\" class=\"input\" value=\"${defaultDue()}\" aria-label=\"Fecha de devoluci\u00f3n\"></p><button class=\"button\" style=\"width:100%\" type=\"button\" data-request=\"${esc(b.id)}\">Solicitar pr\u00e9stamo</button>`:'';
+    $('bookDetail').innerHTML=`<div class=\"detail-layout\"><aside><div class=\"cover\">${cover}</div><section class=\"panel availability\"><h2>Disponibilidad por biblioteca</h2>${rows}</section></aside><section><span class=\"status ${free?'good':'bad'}\">${free?'Disponible \u00b7 '+free+(free===1?' ejemplar':' ejemplares'):'No disponible'}</span><h1 class=\"page-heading\" style=\"margin-top:12px\">${esc(b.titulo)}</h1><div class=\"book-meta\">${authors?`<span><strong>Autor:</strong> ${esc(authors)}</span>`:''}${b.editorial?`<span><strong>Editorial:</strong> ${esc(b.editorial.nombre)}</span>`:''}${edition?`<span><strong>Edici\u00f3n:</strong> ${esc(edition)}</span>`:''}</div>${b.isbn?`<p class=\"isbn\">ISBN: ${esc(b.isbn)}</p>`:''}<div class=\"tags\">${tags}</div><div class=\"tabs\" role=\"tablist\"><button class=\"tab\" role=\"tab\" aria-selected=\"true\" data-tab=\"desc\">Descripci\u00f3n</button><button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tech\">Ficha t\u00e9cnica</button></div><div id=\"tab-desc\" class=\"tab-panel active\" role=\"tabpanel\">${esc(b.resumen)||'Sin descripci\u00f3n.'}</div><div id=\"tab-tech\" class=\"tab-panel\" role=\"tabpanel\">ISBN: ${esc(b.isbn||'\u2014')}<br>Editorial: ${esc(b.editorial?b.editorial.nombre:'\u2014')}<br>Ejemplares totales: ${b.ejemplares_totales??(b.ejemplares||[]).length}</div>${action}</section></div>`;
+  }catch{$('bookDetail').innerHTML=empty('No se pudo cargar la ficha del libro.')}
+}
+$('bookList').addEventListener('click',e=>{const t=e.target.closest('[data-detail]');if(t)openBook(t.dataset.detail)});
+$('backToCatalog').addEventListener('click',()=>showSection('catalog'));
+$('bookDetail').addEventListener('click',async e=>{
+  const tab=e.target.closest('[data-tab]');
+  if(tab){
+    document.querySelectorAll('#bookDetail .tab').forEach(t=>t.setAttribute('aria-selected','false'));
+    document.querySelectorAll('#bookDetail .tab-panel').forEach(p=>p.classList.remove('active'));
+    tab.setAttribute('aria-selected','true');$('tab-'+tab.dataset.tab).classList.add('active');return;
+  }
+  const btn=e.target.closest('[data-request]');if(!btn)return;
+  const date=btn.parentElement.querySelector('input[type=date]').value;
+  if(!date){note('Elige una fecha de devoluci\u00f3n.');return}
+  btn.disabled=true;
+  const r=await api('/api/v1/prestamos/solicitar/',{method:'POST',body:JSON.stringify({libro:btn.dataset.request,fecha_devolucion_pactada:new Date(date+'T23:59:00').toISOString()})});
+  if(r.ok){note('Solicitud enviada. Queda pendiente de aprobaci\u00f3n.');await Promise.all([loadLoans(),loadBooks(),openBook(btn.dataset.request)])}
+  else{const d=await r.json().catch(()=>({}));note(d.detail||'No se pudo enviar la solicitud.');btn.disabled=false}
+});
+
+const field=(label,value)=>`<div class=\"profile-field\"><label>${label}</label><span>${esc(value||'\u2014')}</span></div>`;
+async function loadProfile(){
+  try{
+    const r=await api('/api/v1/usuarios/mi-perfil/');if(!r.ok)throw 0;
+    const p=await r.json();const x=p.perfil||{};
+    let html=field('NOMBRE COMPLETO',`${p.nombre} ${p.apellidos}`)+field('USUARIO',p.usuario)+field('IDENTIDAD',p.ci)+field('CORREO',p.email);
+    if(x.carrera)html+=field('CARRERA',x.carrera)+field('FACULTAD',x.facultad)+field('A\u00d1O / CURSO',`${x.anio}\u00ba a\u00f1o \u00b7 ${x.tipo_curso}`);
+    if(x.cargo)html+=field('CARGO',x.cargo)+field('DEPARTAMENTO',x.departamento);
+    html+=`<div class=\"profile-field\"><label>TEL\u00c9FONO</label><input class=\"input\" id=\"phoneInput\" maxlength=\"30\" value=\"${esc(p.telefono)}\" aria-label=\"Tel\u00e9fono\"></div>`;
+    $('profileGrid').innerHTML=html;
+  }catch{$('profileGrid').innerHTML=empty('No se pudo cargar tu perfil.')}
+}
+$('saveProfile').addEventListener('click',async()=>{
+  const r=await api('/api/v1/usuarios/mi-perfil/',{method:'PATCH',body:JSON.stringify({telefono:$('phoneInput').value.trim()})});
+  note(r.ok?'Cambios guardados.':'No se pudieron guardar los cambios.');
+});
+async function loadCard(){
+  try{
+    const r=await api('/api/v1/usuarios/mi-carnet/');if(!r.ok)throw 0;
+    const c=await r.json();
+    $('cardBox').innerHTML=`<h2>${esc(c.nombre_completo)}</h2><p class=\"user-role\">${esc(ROLES[c.tipo_usuario]||c.tipo_usuario)}${c.carrera?' \u00b7 '+esc(c.carrera):''}</p>${c.facultad?`<p class=\"user-role\">${esc(c.facultad)}</p>`:''}<p class=\"user-role\">C\u00f3digo del carnet</p><p style=\"font-family:monospace;font-size:12px;word-break:break-all\">${esc(c.codigo_qr)}</p>`;
+  }catch{$('cardBox').innerHTML=empty('No se pudo cargar tu carnet.')}
+}
+loadProfile();loadCard();loadLoans();loadFilterOptions();loadBooks();
+})();
+</script></body></html>
