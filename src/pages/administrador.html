@@ -31,7 +31,7 @@ $('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');
 let toastTimer;const notify=m=>{$('toast').textContent=m;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3200)};
 function sessionHeaders(json=true){return {...(json?{'Content-Type':'application/json'}:{}),Authorization:'Bearer '+session.access}}
 async function request(url,options={}){
-  const send=()=>fetch(url,{...options,headers:{...sessionHeaders(),...(options.headers||{})}});
+  const send=()=>fetch(url,{...options,headers:{...sessionHeaders(!(options.body instanceof FormData)),...(options.headers||{})}});
   let response=await send();
   if(response.status===401&&session.refresh){
     const refresh=await fetch('http://localhost:8000/api/token/refresh/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh:session.refresh})});
@@ -44,6 +44,47 @@ async function getList(url){const r=await request(url);if(!r.ok)throw new Error(
 async function errorMessage(r){const d=await r.json().catch(()=>({}));return d.detail||Object.entries(d).map(([k,v])=>`${k}: ${Array.isArray(v)?v.join(', '):v}`).join(' · ')||`Error HTTP ${r.status}`}
 let books=[],libraries=[],authors=[],categories=[],publishers=[];
 const labelFor=b=>`${b.nombre||''} ${b.apellidos||''}`.trim();
+const importActions=document.createElement('div');
+importActions.className='actions';
+importActions.innerHTML='<button id="downloadTemplate" class="button secondary" type="button">Descargar plantilla</button><input id="importFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden><button id="chooseImport" class="button secondary" type="button">Importar Excel</button>';
+document.querySelector('.toolbar').append(importActions);
+const importReport=document.createElement('section');
+importReport.className='panel';
+importReport.hidden=true;
+importReport.style.cssText='padding:14px;margin-bottom:14px;white-space:pre-wrap;font-size:12px';
+importReport.setAttribute('role','status');
+document.querySelector('.toolbar').after(importReport);
+function showImportResult(result){
+  const errors=result.errores||[];
+  importReport.textContent=[
+    `Filas procesadas: ${result.filas_procesadas}`,
+    `Títulos creados: ${result.libros_creados} · actualizados: ${result.libros_actualizados}`,
+    `Ejemplares creados: ${result.ejemplares_creados} · archivados: ${result.ejemplares_archivados||0}`,
+    errors.length?`Errores:\n${errors.map(error=>`Fila ${error.fila}: ${error.motivo}`).join('\n')}`:'Importación completada sin errores.'
+  ].join('\n');
+  importReport.hidden=false;
+}
+document.getElementById('downloadTemplate').addEventListener('click',async event=>{
+  const button=event.currentTarget;button.disabled=true;
+  try{
+    const response=await request(API+'/plantilla/',{headers:{Accept:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}});
+    if(!response.ok)throw new Error(await errorMessage(response));
+    const link=document.createElement('a');link.href=URL.createObjectURL(await response.blob());link.download='plantilla_importacion_libros.xlsx';link.click();URL.revokeObjectURL(link.href);
+  }catch(error){notify(error.message||'No se pudo descargar la plantilla.')}
+  finally{button.disabled=false}
+});
+document.getElementById('chooseImport').addEventListener('click',()=>document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change',async event=>{
+  const file=event.target.files[0];if(!file)return;
+  const button=document.getElementById('chooseImport');button.disabled=true;
+  try{
+    const form=new FormData();form.append('file',file);
+    const response=await request(API+'/importar/',{method:'POST',body:form});
+    if(!response.ok)throw new Error(await errorMessage(response));
+    showImportResult(await response.json());await loadLookups();await loadBooks();notify('Importación finalizada.');
+  }catch(error){importReport.textContent=error.message||'No se pudo importar el fichero.';importReport.hidden=false;notify('No se pudo importar el fichero.')}
+  finally{button.disabled=false;event.target.value=''}
+});
 async function loadLookups(){
   [libraries,categories,authors,publishers]=await Promise.all([
     getList(PUBLIC+'/bibliotecas/'),getList(PUBLIC+'/categorias/'),getList(API+'/autores/'),getList(API+'/editoriales/')
