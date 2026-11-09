@@ -84,7 +84,9 @@ form.addEventListener('submit', async (e) => {
     const staff = ['BIBLIOTECARIO', 'ADMINISTRADOR', 'SUPER_ADMIN'].includes(data.tipo_usuario) || data.is_staff;
     const pendingBook = sessionStorage.getItem('uho_pending_book');
     sessionStorage.removeItem('uho_pending_book');
-    window.location.href = staff ? 'src/pages/bibliotecario.html'
+    const administrator = ['ADMINISTRADOR', 'SUPER_ADMIN'].includes(data.tipo_usuario);
+    window.location.href = administrator ? 'src/pages/administrador.html'
+      : staff ? 'src/pages/bibliotecario.html'
       : pendingBook ? 'src/pages/panel-usuario.html?libro=' + encodeURIComponent(pendingBook)
       : 'src/pages/panel-usuario.html';
   } catch {
