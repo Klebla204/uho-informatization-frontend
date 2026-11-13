@@ -86,11 +86,11 @@ form.addEventListener('submit', async (e) => {
     sessionStorage.removeItem('uho_pending_book');
     const superAdmin = data.tipo_usuario === 'SUPER_ADMIN' || (data.roles || []).includes('super_admin');
     const administrator = data.tipo_usuario === 'ADMINISTRADOR';
-    window.location.href = superAdmin ? 'src/pages/super-admin.html'
-      : administrator ? 'src/pages/administrador.html'
-      : staff ? 'src/pages/bibliotecario.html'
-      : pendingBook ? 'src/pages/panel-usuario.html?libro=' + encodeURIComponent(pendingBook)
-      : 'src/pages/panel-usuario.html';
+    window.location.href = superAdmin ? '/pages/super-admin.html'
+      : administrator ? '/pages/administrador.html'
+      : staff ? '/pages/bibliotecario.html'
+      : pendingBook ? '/pages/panel-usuario.html?libro=' + encodeURIComponent(pendingBook)
+      : '/pages/panel-usuario.html';
   } catch {
     show('error', 'No se pudo conectar con el backend. Verifica que esté en ejecución y el CORS.');
   } finally {

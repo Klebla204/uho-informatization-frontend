@@ -30,3 +30,12 @@ export async function fetchLibraries({ signal } = {}) {
   if (data && Array.isArray(data.results)) return data.results;
   throw new Error('El formato recibido de bibliotecas no es válido.');
 }
+
+export async function fetchCategories({ signal } = {}) {
+  const response = await fetch(`${API_BASE}/api/v1/categorias/`, { signal });
+  if (!response.ok) throw new Error(`Las categorías no respondieron (HTTP ${response.status}).`);
+  const data = await response.json();
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.results)) return data.results;
+  throw new Error('El formato recibido de categorías no es válido.');
+}

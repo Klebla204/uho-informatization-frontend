@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auditoría | BiblioUHO</title>
+<link rel="stylesheet" href="../styles/shared.css">
+<style>
+.audit-page{max-width:1500px;margin:0 auto;padding:22px}.audit-heading{margin:0 0 5px;color:var(--ink);font-size:22px}.audit-lead{margin:0 0 18px;color:var(--muted);font-size:13px}.audit-filters{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr)) auto;gap:10px;align-items:end;margin-bottom:12px}.audit-field{display:grid;gap:5px;color:var(--ink-soft);font-size:10px;font-weight:700}.audit-field input{min-width:0}.audit-status{min-height:20px;margin:0 0 10px;color:var(--muted);font-size:11px}.audit-status.error{color:var(--red)}.audit-table-wrap{overflow:auto;max-height:calc(100vh - 230px)}.audit-table{width:100%;border-collapse:collapse;font-size:11px}.audit-table th,.audit-table td{padding:9px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}.audit-table th{position:sticky;top:0;background:#f8fafc;color:var(--muted);font-size:9px;text-transform:uppercase;z-index:1}.audit-table td{max-width:260px;overflow-wrap:anywhere}.audit-table pre{max-width:280px;max-height:120px;overflow:auto;margin:0;white-space:pre-wrap;font:10px/1.5 ui-monospace,Consolas,monospace}.audit-empty{text-align:center;color:var(--muted);padding:24px!important}.audit-user{white-space:nowrap}.embedded .audit-page{padding:0}.embedded .audit-heading{font-size:22px}@media(max-width:900px){.audit-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.audit-table-wrap{max-height:calc(100vh - 300px)}}@media(max-width:560px){.audit-page{padding:16px 12px}.audit-filters{grid-template-columns:1fr}.audit-filters .button{width:100%}}
+</style>
+</head>
+<body class="page-shell">
+<header class="topbar"><a class="brand" href="super-admin.html">Biblio<span>UHO</span></a><span class="topbar-title">Administración · Auditoría</span></header>
+<main class="audit-page">
+  <h1 class="audit-heading">Registro de auditoría</h1>
+  <p class="audit-lead">Acciones registradas en el sistema.</p>
+  <form id="filters" class="audit-filters">
+    <label class="audit-field">Acción<input id="action" class="input" type="search" placeholder="LOGIN, LOAN…"></label>
+    <label class="audit-field">Entidad<input id="entity" class="input" type="search" placeholder="préstamo, catálogo…"></label>
+    <label class="audit-field">Desde<input id="start" class="input" type="date"></label>
+    <label class="audit-field">Hasta<input id="end" class="input" type="date"></label>
+    <button class="button" type="submit">Filtrar</button>
+  </form>
+  <p id="status" class="audit-status" role="status">Cargando registros…</p>
+  <div class="audit-table-wrap panel"><table class="audit-table"><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Entidad</th><th>ID entidad</th><th>IP</th><th>Datos anteriores</th><th>Datos nuevos</th></tr></thead><tbody id="rows"></tbody></table></div>
+</main>
+<script>
+const API='http://localhost:8000/api/v1/admin/auditoria/';
+const $=id=>document.getElementById(id);
+let session=null;try{session=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}
+const embedded=new URLSearchParams(location.search).get('embed')==='1';
+if(embedded){document.body.classList.add('embedded');document.querySelector('.topbar').hidden=true}
+if(!session?.access)location.replace('../../login.html');
+const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+async function loadLogs(event){event?.preventDefault();$('status').classList.remove('error');$('status').textContent='Cargando registros…';$('rows').innerHTML='';const params=new URLSearchParams();const action=$('action').value.trim();const entity=$('entity').value.trim();if(action)params.set('accion',action);if(entity)params.set('entidad',entity);if($('start').value)params.set('desde',new Date(`${$('start').value}T00:00:00`).toISOString());if($('end').value)params.set('hasta',new Date(`${$('end').value}T23:59:59.999`).toISOString());try{const response=await fetch(`${API}?${params}`,{headers:{Authorization:`Bearer ${session.access}`}});if(response.status===401){sessionStorage.removeItem('uho_auth');location.replace('../../login.html');return}if(!response.ok){const error=await response.json().catch(()=>({}));throw new Error(error.detail||`Error HTTP ${response.status}`)}const logs=await response.json();render(logs);$('status').textContent=`${logs.length} registro(s)`}catch(error){$('status').classList.add('error');$('status').textContent=error.message||'No se pudieron cargar los registros.'}}
+function render(logs){if(!logs.length){$('rows').innerHTML='<tr><td class="audit-empty" colspan="8">No hay registros para estos filtros.</td></tr>';return}$('rows').innerHTML=logs.map(log=>`<tr><td>${esc(new Date(log.timestamp).toLocaleString('es'))}</td><td class="audit-user">${esc(log.usuario_auth_uid||'Sistema')}</td><td><strong>${esc(log.accion)}</strong></td><td>${esc(log.entidad)}</td><td>${esc(log.entidad_id||'—')}</td><td>${esc(log.ip||'—')}</td><td><pre>${esc(log.datos_anteriores?JSON.stringify(log.datos_anteriores,null,2):'—')}</pre></td><td><pre>${esc(log.datos_nuevos?JSON.stringify(log.datos_nuevos,null,2):'—')}</pre></td></tr>`).join('')}
+$('filters').addEventListener('submit',loadLogs);
+loadLogs();
+</script>
+</body>
+</html>

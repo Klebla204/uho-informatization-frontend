@@ -42,6 +42,8 @@ npm ci
 npm run dev
 ```
 
+La configuración de Vite usa `frontend/src` como raíz. El catálogo React se sirve en `/` y el login en `/login.html`; las páginas independientes se sirven desde `/pages/` (por ejemplo, `/pages/catalogo.html`). El índice de plantillas independientes está en `/pages/plantillas.html`.
+
 3) Build de producción:
 ```powershell
 npm run build

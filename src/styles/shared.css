@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
 
+[hidden] { display: none !important; }
+
 * { box-sizing: border-box; }
 :root { --navy:#102542; --blue:#1a3a6b; --blue-soft:#e8f0fb; --green:#1e6e3e; --green-soft:#e6f4ec; --red:#c0392b; --red-soft:#fdecea; --amber:#d97706; --amber-soft:#fef3c7; --muted:#64748b; --line:#dce3ec; --surface:#fff; --page:#f1f5f9; --ink:#172033; --ink-soft:#475569; --shadow:0 3px 14px rgba(20,35,60,.07); }
 body { margin: 0; color: #172033; background: #eef2f7; font-family: 'Sora', sans-serif; }
