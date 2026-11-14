@@ -18,7 +18,7 @@
 <div class="report-grid"><section class="report-panel panel"><h2>Préstamos vencidos</h2><div class="report-table-wrap"><table class="report-table"><thead><tr><th>Usuario</th><th>Libro</th><th>Biblioteca</th><th>Fecha pactada</th><th>Estado</th></tr></thead><tbody id="overdueRows"></tbody></table></div></section><section class="report-panel panel"><h2>Colección por categoría</h2><div class="report-table-wrap"><table class="report-table"><thead><tr><th>Categoría</th><th>Ejemplares</th></tr></thead><tbody id="categoriesRows"></tbody></table></div></section></div>
 </main><div id="toast" class="toast" role="status" hidden></div>
 <script>
-const API='http://localhost:8000';
+const API=window.API_BASE_URL;
 const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 let session=null;try{session=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}

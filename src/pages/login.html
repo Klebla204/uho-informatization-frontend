@@ -49,7 +49,7 @@ pre{margin:10px 0 0;white-space:pre-wrap;word-break:break-all;font-size:11px;col
   </form>
 </main>
 <script type="module">
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE = window.API_BASE_URL;
 const form = document.getElementById('form');
 const msg = document.getElementById('msg');
 const btn = document.getElementById('submit');

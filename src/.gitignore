@@ -1,11 +1,13 @@
- # Node.js
+# Node.js
 node_modules/
 dist/
 
- #Logs
- npm-debug.log*
- yarn-debug.log*
- yarn-error.log*
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
- # Environment
- .env
+# Environment
+.env
+.env.*
+!.env.example

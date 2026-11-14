@@ -31,7 +31,7 @@
 </main>
 <div id="toast" class="toast" role="status" hidden></div>
 <script>
-const API='http://localhost:8000';
+const API=window.API_BASE_URL;
 const $=id=>document.getElementById(id);
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const empty=t=>`<p class="page-lead" style="padding:14px 0;grid-column:1/-1">${t}</p>`;

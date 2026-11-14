@@ -35,8 +35,8 @@ $('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');
 let timer;function notify(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(timer);timer=setTimeout(()=>$('toast').hidden=true,3000)}
 function headers(json=true){return {...(json?{'Content-Type':'application/json'}:{}),Authorization:'Bearer '+session.access}}
 async function api(path,options={}){
-  let response=await fetch('http://localhost:8000'+path,{...options,headers:{...headers(),...(options.headers||{})}});
-  if(response.status===401&&session.refresh){const refresh=await fetch('http://localhost:8000/api/token/refresh/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh:session.refresh})});if(refresh.ok){session.access=(await refresh.json()).access;sessionStorage.setItem('uho_auth',JSON.stringify(session));response=await fetch('http://localhost:8000'+path,{...options,headers:{...headers(),...(options.headers||{})}})}}
+  let response=await fetch(window.API_BASE_URL+path,{...options,headers:{...headers(),...(options.headers||{})}});
+  if(response.status===401&&session.refresh){const refresh=await fetch(window.API_BASE_URL+'/api/token/refresh/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh:session.refresh})});if(refresh.ok){session.access=(await refresh.json()).access;sessionStorage.setItem('uho_auth',JSON.stringify(session));response=await fetch(window.API_BASE_URL+path,{...options,headers:{...headers(),...(options.headers||{})}})}}
   if(response.status===401){sessionStorage.removeItem('uho_auth');location.replace('../../login.html')}
   return response;
 }

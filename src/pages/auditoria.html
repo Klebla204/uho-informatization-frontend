@@ -24,7 +24,7 @@
   <div class="audit-table-wrap panel"><table class="audit-table"><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Entidad</th><th>ID entidad</th><th>IP</th><th>Datos anteriores</th><th>Datos nuevos</th></tr></thead><tbody id="rows"></tbody></table></div>
 </main>
 <script>
-const API='http://localhost:8000/api/v1/admin/auditoria/';
+const API=window.API_BASE_URL+'/api/v1/admin/auditoria/';
 const $=id=>document.getElementById(id);
 let session=null;try{session=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}
 const embedded=new URLSearchParams(location.search).get('embed')==='1';

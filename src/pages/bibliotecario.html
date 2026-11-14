@@ -18,7 +18,7 @@
 document.getElementById('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');location.href='catalogo.html'});
 const sectionButtons=[...document.querySelectorAll('[data-staff]')];sectionButtons.forEach(button=>button.addEventListener('click',()=>{sectionButtons.forEach(item=>item.removeAttribute('aria-current'));button.setAttribute('aria-current','true');document.querySelectorAll('.staff-section').forEach(section=>section.classList.remove('active'));document.getElementById(`staff-${button.dataset.staff}`).classList.add('active')}));const toast=document.getElementById('toast');let timer;function notify(message){toast.textContent=message;toast.hidden=false;clearTimeout(timer);timer=setTimeout(()=>toast.hidden=true,2600)}
 (()=>{
-const API='http://localhost:8000';
+const API=window.API_BASE_URL;
 let session=null;try{session=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}
 if(!session||!session.access)return;
 const $=id=>document.getElementById(id);

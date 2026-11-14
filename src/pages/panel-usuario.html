@@ -22,7 +22,7 @@ const buttons=[...document.querySelectorAll('[data-section]')];buttons.forEach(b
 </script>
 <script>
 (()=>{
-const API='http://localhost:8000';
+const API=window.API_BASE_URL;
 let session=null;try{session=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}
 if(!session||!session.access)return;
 const $=id=>document.getElementById(id);
