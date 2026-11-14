@@ -1,15 +1,17 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel bibliotecario | BiblioUHO</title><link rel="stylesheet" href="../styles/shared.css"><style>
-.staff-layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 58px)}.staff-side{padding:18px 12px;color:#fff;background:var(--blue)}.staff-name{padding:4px 8px 18px;border-bottom:1px solid #ffffff26;font-size:13px;font-weight:700}.staff-name small{display:block;margin-top:4px;color:#c8d5e6;font-size:10px;font-weight:400}.staff-nav{display:grid;gap:5px;margin-top:14px}.staff-nav button{padding:10px;text-align:left;border:0;border-radius:7px;background:transparent;color:#e3ebf5;font:11px 'Sora',sans-serif;cursor:pointer}.staff-nav button:hover,.staff-nav button[aria-current=true]{background:#ffffff1c;color:white}.staff-count{float:right;padding:2px 6px;border-radius:20px;background:#dc2626;color:white;font-size:9px}.staff-content{padding:22px;min-width:0}.staff-section{display:none}.staff-section.active{display:block}.request-card{display:flex;gap:12px;align-items:flex-start;margin:10px 0;padding:15px}.request-icon{display:grid;width:44px;height:55px;flex:0 0 auto;place-items:center;border-radius:6px;background:var(--blue-soft);font-size:22px}.request-main{flex:1}.request-main h2{margin:0 0 4px;font-size:12px}.request-main p{margin:4px 0;color:var(--muted);font-size:10px}.request-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.form-group label{display:block;margin-bottom:5px;color:var(--ink-soft);font-size:10px;font-weight:700}.form-group.full{grid-column:1/-1}.loan-table{width:100%;border-collapse:collapse;font-size:11px}.loan-table th,.loan-table td{padding:11px;text-align:left;border-bottom:1px solid var(--line)}.loan-table th{color:var(--muted);font-size:9px;text-transform:uppercase}.filter-row{display:flex;gap:8px;align-items:center;margin:0 0 14px}.filter-row .input{max-width:300px}@media(max-width:720px){.staff-layout{grid-template-columns:1fr}.staff-side{padding:12px}.staff-name{padding-bottom:10px}.staff-nav{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.staff-content{padding:15px}.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.request-card{flex-wrap:wrap}}
-</style></head>
-<body class="page-shell"><header class="topbar"><a class="brand" href="#gestion">Biblio<span>UHO</span></a><span class="topbar-title">Gestión de biblioteca · Personal autorizado</span><button type="button" id="logout" style="padding:7px 14px;border:1px solid #dce4e7;border-radius:5px;background:#fff;color:#102a43;font:inherit;font-size:13px;cursor:pointer">Cerrar sesión</button></header>
-<div class="staff-layout"><aside class="staff-side"><div class="staff-name"><span id="staffName"></span><small id="staffRole"></small></div><nav class="staff-nav" aria-label="Funciones de biblioteca"><button type="button" data-staff="requests" aria-current="true">Solicitudes pendientes <span class="staff-count" id="pendingCount">0</span></button><button type="button" data-staff="counter">Préstamo presencial</button><button type="button" data-staff="active">Préstamos activos</button><button type="button" data-staff="due">Vencimientos <span class="staff-count" id="dueCount">0</span></button><button type="button" data-staff="catalog">Gestión del catálogo</button></nav></aside><main class="staff-content" id="gestion">
+.staff-layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 58px)}.staff-side{padding:18px 12px;color:var(--ink);background:#fff}.staff-name{padding:4px 8px 18px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}.staff-name small{display:block;margin-top:4px;color:var(--muted);font-size:10px;font-weight:400}.staff-nav{display:grid;gap:5px;margin-top:14px}.staff-nav button{padding:10px;text-align:left;border:0;border-radius:7px;background:transparent;color:var(--ink-soft);font:11px 'Sora',sans-serif;cursor:pointer}.staff-nav button:hover,.staff-nav button[aria-current=true]{background:var(--blue-soft);color:var(--blue)}.staff-count{float:right;padding:2px 6px;border-radius:20px;background:#dc2626;color:white;font-size:9px}.staff-content{padding:22px;min-width:0}.staff-section{display:none}.staff-section.active{display:block}.request-card{display:flex;gap:12px;align-items:flex-start;margin:10px 0;padding:15px}.request-icon{display:grid;width:44px;height:55px;flex:0 0 auto;place-items:center;border-radius:6px;background:var(--blue-soft);font-size:22px}.request-main{flex:1}.request-main h2{margin:0 0 4px;font-size:12px}.request-main p{margin:4px 0;color:var(--muted);font-size:10px}.request-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.form-group label{display:block;margin-bottom:5px;color:var(--ink-soft);font-size:10px;font-weight:700}.form-group.full{grid-column:1/-1}.loan-table{width:100%;border-collapse:collapse;font-size:11px}.loan-table th,.loan-table td{padding:11px;text-align:left;border-bottom:1px solid var(--line)}.loan-table th{color:var(--muted);font-size:9px;text-transform:uppercase}.filter-row{display:flex;gap:8px;align-items:center;margin:0 0 14px}.filter-row .input{max-width:300px}@media(max-width:720px){.staff-layout{grid-template-columns:1fr}.staff-side{padding:12px}.staff-name{padding-bottom:10px}.staff-nav{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.staff-content{padding:15px}.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.request-card{flex-wrap:wrap}}
+.qr-backdrop{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:18px;background:#0b1c2dcc}.qr-dialog{width:min(100%,520px);padding:20px;background:#fff;border-radius:8px;box-shadow:0 18px 60px #0b1c2d55}.qr-dialog-header{display:flex;justify-content:space-between;align-items:center;gap:12px}.qr-dialog h2{margin:0;font-size:17px}.qr-dialog p{color:var(--muted);font-size:12px}.qr-reader{min-height:280px;overflow:hidden;border:1px solid var(--line);border-radius:5px}.qr-status{min-height:20px;color:var(--muted);font-size:12px}.verified-user{margin-top:6px;color:var(--green);font-size:11px;font-weight:600}
+</style><style>.qr-backdrop[hidden]{display:none}</style></head>
+<body class="page-shell"><header class="topbar"><a class="brand" href="#gestion"><img class="brand-logo" src="../assets/uho-logo.png" alt="Universidad de Holguín"><span>BiblioUHO</span></a><span class="topbar-title">Gestión de biblioteca · Personal autorizado</span><button type="button" id="logout" style="padding:7px 14px;border:1px solid #dce4e7;border-radius:5px;background:#fff;color:#102a43;font:inherit;font-size:13px;cursor:pointer">Cerrar sesión</button></header>
+<div class="staff-layout"><aside class="staff-side"><div class="staff-name"><span id="staffName"></span><small id="staffRole"></small></div><nav class="staff-nav" aria-label="Funciones de biblioteca"><button type="button" data-staff="requests" aria-current="true">Solicitudes pendientes <span class="staff-count" id="pendingCount" hidden>0</span></button><button type="button" data-staff="counter">Préstamo presencial</button><button type="button" data-staff="active">Préstamos activos</button><button type="button" data-staff="due">Vencimientos <span class="staff-count" id="dueCount" hidden>0</span></button><button type="button" data-staff="catalog">Gestión del catálogo</button></nav></aside><main class="staff-content" id="gestion">
 <section id="staff-requests" class="staff-section active"><h1 class="page-heading">Solicitudes pendientes</h1><p class="page-lead">Revisa y gestiona las solicitudes recibidas.</p><div id="requestList"></div><p id="emptyRequests" class="empty-state panel" hidden>No quedan solicitudes pendientes.</p></section>
-<section id="staff-counter" class="staff-section"><h1 class="page-heading">Nuevo préstamo presencial</h1><p class="page-lead">Registra la entrega de un ejemplar en el mostrador.</p><form id="counterForm" class="panel form-grid"><div class="form-group"><label for="userSearch">Usuario (escanea el QR del carnet o escribe CI / usuario)</label><input id="userSearch" class="input" required autocomplete="off" autofocus placeholder="Escanea el QR o escribe CI, usuario o nombre"></div><div class="form-group"><label for="bookSelect">Libro</label><input id="bookSelect" class="input" list="bookOptions" required autocomplete="off" placeholder="Escribe el título, autor o ISBN"><datalist id="bookOptions"></datalist></div><div class="form-group"><label for="librarySelect">Biblioteca</label><select id="librarySelect" class="select" required></select></div><div class="form-group"><label for="dueDate">Fecha de devolución</label><input id="dueDate" class="input" type="date" required></div><div class="form-group full"><label for="notes">Observaciones</label><input id="notes" class="input" placeholder="Opcional"></div><div class="form-group full"><button class="button" type="submit">Registrar préstamo</button></div></form></section>
+<section id="staff-counter" class="staff-section"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px"><div><h1 class="page-heading">Nuevo préstamo presencial</h1><p class="page-lead">Registra la entrega de un ejemplar en el mostrador.</p></div><button id="openQrScanner" class="button secondary" type="button" aria-label="Escanear código QR del carnet">▦ Escanear código QR</button></div><form id="counterForm" class="panel form-grid"><div class="form-group"><label for="userSearch">Usuario (escanea el QR del carnet o escribe CI / usuario)</label><input id="userSearch" class="input" required autocomplete="off" autofocus placeholder="Escanea el QR o escribe CI, usuario o nombre"><div id="qrUserResult" class="verified-user" role="status" hidden></div></div><div class="form-group"><label for="bookSelect">Libro</label><input id="bookSelect" class="input" list="bookOptions" required autocomplete="off" placeholder="Escribe el título, autor o ISBN"><datalist id="bookOptions"></datalist></div><div class="form-group"><label for="librarySelect">Biblioteca</label><select id="librarySelect" class="select" required></select></div><div class="form-group"><label for="dueDate">Fecha de devolución</label><input id="dueDate" class="input" type="date" required></div><div class="form-group full"><label for="notes">Observaciones</label><input id="notes" class="input" placeholder="Opcional"></div><div class="form-group full"><button class="button" type="submit">Registrar préstamo</button></div></form></section>
 <section id="staff-due" class="staff-section"><h1 class="page-heading">Vencimientos</h1><p class="page-lead">Préstamos que vencen en los próximos 3 días y préstamos ya vencidos.</p><h2>Vencidos</h2><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Acción</th></tr></thead><tbody id="overdueRows"></tbody></table></div><h2 style="margin-top:20px">Próximos a vencer</h2><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Acción</th></tr></thead><tbody id="upcomingRows"></tbody></table></div></section>
 <section id="staff-active" class="staff-section"><h1 class="page-heading">Préstamos activos</h1><p class="page-lead">Consulta préstamos y fechas de devolución.</p><div class="filter-row"><input id="loanFilter" class="input" type="search" placeholder="Buscar usuario, título o ejemplar"></div><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="activeRows"></tbody></table></div></section>
 <section id="staff-catalog" class="staff-section"><iframe title="Gestión del catálogo" src="administrador.html?embed=1" style="display:block;width:100%;height:calc(100vh - 120px);min-height:720px;border:0;background:transparent"></iframe></section>
 </main></div><div id="toast" class="toast" role="status" hidden></div>
+<div id="qrBackdrop" class="qr-backdrop" hidden><section class="qr-dialog" role="dialog" aria-modal="true" aria-labelledby="qrTitle"><header class="qr-dialog-header"><h2 id="qrTitle">Escanear carnet</h2><button id="closeQrScanner" class="button secondary" type="button" aria-label="Cerrar escáner">Cerrar</button></header><p>Centra el código QR del carnet frente a la cámara.</p><div id="qrReader" class="qr-reader"></div><p id="qrStatus" class="qr-status" role="status">Solicitando acceso a la cámara…</p></section></div>
 <script>
 (()=>{let s=null;try{s=JSON.parse(sessionStorage.getItem('uho_auth'))}catch{}const staff=s&&(['BIBLIOTECARIO','ADMINISTRADOR','SUPER_ADMIN'].includes(s.tipo_usuario)||s.is_staff);if(!s||!s.access)location.replace('../../login.html');else if(!staff)location.replace('panel-usuario.html')})();
 document.getElementById('logout').addEventListener('click',()=>{sessionStorage.removeItem('uho_auth');location.href='catalogo.html'});
@@ -52,7 +54,7 @@ async function loadPending(){
   try{
     const loans=await list('/api/v1/prestamos/solicitudes/');
     $('requestList').innerHTML=loans.map(l=>{const [label,cls]=REQUEST_LABEL[l.estado]||[l.estado,''];const buttons=(REQUEST_ACTIONS[l.estado]||[]).map(([a,t,c])=>`<button class="button ${c}" type="button" data-id="${esc(l.id)}" data-action="${a}">${t}</button>`).join('');return `<article class="request-card panel"><div class="request-icon">📘</div><div class="request-main"><h2>${esc(l.libro_titulo)} <span class="status ${cls}">${label}</span></h2><p>${esc(l.usuario_nombre)} · ${esc(l.usuario_tipo)}</p><p>${esc(l.biblioteca_nombre)} · Ejemplar ${esc(l.codigo_ejemplar)} · Devolución pactada ${fmt(l.fecha_devolucion_pactada)}</p><div class="request-actions">${buttons}</div></div></article>`}).join('');
-    $('pendingCount').textContent=loans.length;$('emptyRequests').hidden=loans.length>0;
+    $('pendingCount').textContent=loans.length;$('pendingCount').hidden=loans.length===0;$('emptyRequests').hidden=loans.length>0;
   }catch{notify('No se pudieron cargar las solicitudes.')}
 }
 async function loadDue(){
@@ -62,7 +64,7 @@ async function loadDue(){
     const row=l=>`<tr><td>${esc(l.libro_titulo)}</td><td>${esc(l.usuario_nombre)}</td><td>${esc(l.codigo_ejemplar)}</td><td>${fmt(l.fecha_devolucion_pactada)} <span class="status ${l.vencido?'bad':'warn'}">${l.vencido?'Vencido':l.dias_restantes===0?'Vence hoy':'En '+l.dias_restantes+' día(s)'}</span></td><td><button class="button secondary" type="button" data-id="${esc(l.id)}" data-action="devolver">Registrar devolución</button></td></tr>`;
     $('overdueRows').innerHTML=d.vencidos.map(row).join('')||'<tr><td colspan="5">No hay préstamos vencidos.</td></tr>';
     $('upcomingRows').innerHTML=d.proximos.map(row).join('')||'<tr><td colspan="5">No hay préstamos próximos a vencer.</td></tr>';
-    $('dueCount').textContent=d.vencidos.length+d.proximos.length;
+    const dueCount=d.vencidos.length+d.proximos.length;$('dueCount').textContent=dueCount;$('dueCount').hidden=dueCount===0;
   }catch{notify('No se pudieron cargar los vencimientos.')}
 }
 async function loadActive(){
@@ -100,6 +102,46 @@ async function searchBooks(term){
     $('bookOptions').innerHTML=books.slice(0,20).map(b=>{const label=b.isbn?`${b.titulo} (${b.isbn})`:b.titulo;bookByLabel.set(label,b.id);return `<option value="${esc(label)}"></option>`}).join('');
   }catch{notify('No se pudo buscar libros.')}
 }
+let qrScanner=null;
+let qrLookupPending=false;
+const qrBackdrop=$('qrBackdrop');
+async function stopQrScanner(){
+  if(qrScanner){try{await qrScanner.stop()}catch{}qrScanner.clear();qrScanner=null}
+  qrBackdrop.hidden=true;
+}
+async function resolveScannedUser(rawValue){
+  if(qrLookupPending)return;
+  qrLookupPending=true;
+  const code=rawValue.trim().replace(/^user:/i,'');
+  $('qrStatus').textContent='Verificando el carnet…';
+  try{
+    const users=await list('/api/v1/prestamos/usuarios/?q='+encodeURIComponent(code));
+    const user=users.find(item=>item.id.toLowerCase()===code.toLowerCase());
+    if(!user){$('qrStatus').textContent='El código no corresponde a un usuario activo autorizado.';qrLookupPending=false;return}
+    $('userSearch').value=user.auth_uid;
+    $('qrUserResult').textContent=`Carnet verificado: ${user.nombre} ${user.apellidos} · ${user.tipo_usuario}`;
+    $('qrUserResult').hidden=false;
+    await stopQrScanner();
+    $('bookSelect').focus();
+    notify('Usuario cargado desde el carnet.');
+  }catch{$('qrStatus').textContent='No se pudo verificar el carnet. Comprueba la conexión e inténtalo de nuevo.';qrLookupPending=false}
+}
+$('openQrScanner').addEventListener('click',async()=>{
+  qrLookupPending=false;
+  qrBackdrop.hidden=false;
+  $('qrStatus').textContent='Solicitando acceso a la cámara…';
+  try{
+    qrScanner=new window.Html5Qrcode('qrReader');
+    await qrScanner.start({facingMode:'environment'},{fps:10,qrbox:{width:240,height:240}},resolveScannedUser,()=>{});
+    $('qrStatus').textContent='Cámara activa. Enfoca el código QR del carnet.';
+  }catch(error){
+    $('qrStatus').textContent=error?.name==='NotAllowedError'?'Permite el acceso a la cámara para escanear el carnet.':'No se pudo iniciar la cámara. Usa HTTPS o localhost y verifica que no esté ocupada.';
+    if(qrScanner){try{qrScanner.clear()}catch{}qrScanner=null}
+  }
+});
+$('closeQrScanner').addEventListener('click',stopQrScanner);
+qrBackdrop.addEventListener('click',event=>{if(event.target===qrBackdrop)stopQrScanner()});
+$('userSearch').addEventListener('input',()=>{$('qrUserResult').hidden=true});
 let bookTimer;$('bookSelect').addEventListener('input',e=>{clearTimeout(bookTimer);const term=e.target.value.trim();if(bookByLabel.has(term))return;bookTimer=setTimeout(()=>searchBooks(term),250)});
 async function loadCounterOptions(){
   try{
@@ -119,11 +161,15 @@ $('counterForm').addEventListener('submit',async e=>{
     const bookId=bookByLabel.get($('bookSelect').value.trim());
     if(!bookId){notify('Elige un libro de la lista de sugerencias.');return}
     const r=await post('/api/v1/prestamos/presencial/',{usuario:user.id,libro:bookId,biblioteca:$('librarySelect').value,fecha_devolucion_pactada:new Date($('dueDate').value+'T23:59:00').toISOString(),observaciones:$('notes').value});
-    if(r.ok){notify('Préstamo presencial registrado.');form.reset();await loadActive()}
+    if(r.ok){notify('Préstamo presencial registrado.');form.reset();$('qrUserResult').textContent='';$('qrUserResult').hidden=true;await loadActive()}
     else notify(await errorOf(r,'No se pudo registrar el préstamo.'));
   }catch{notify('No se pudo registrar el préstamo.')}
 });
 
 refresh();loadCounterOptions();
 })();
+</script>
+<script type="module">
+import { Html5Qrcode } from 'html5-qrcode';
+window.Html5Qrcode=Html5Qrcode;
 </script></body></html>

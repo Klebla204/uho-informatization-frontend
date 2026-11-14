@@ -20,7 +20,7 @@
 </style>
 </head>
 <body class="page-shell">
-<header class="topbar"><a class="brand" href="catalogo.html" aria-label="BiblioUHO">Biblio<span>UHO</span></a><span class="topbar-title">Catálogo público · Acceso libre</span><div class="top-actions"><a class="button" id="accessButton" href="../../login.html">Acceder</a></div></header>
+<header class="topbar"><a class="brand" href="catalogo.html" aria-label="BiblioUHO"><img class="brand-logo" src="../assets/uho-logo.png" alt="Universidad de Holguín"><span>BiblioUHO</span></a><span class="topbar-title">Catálogo público · Acceso libre</span><div class="top-actions"><a class="button" id="accessButton" href="../../login.html">Acceder</a></div></header>
 <main class="page-main" id="inicio">
 <div id="catalogView">
 <section class="hero panel"><h1>Catálogo de Bibliotecas<br>Universidad de Holguín</h1><p>Explora títulos y disponibilidad en las bibliotecas de la UHO.</p><form id="searchForm" class="search-row"><input class="input" id="searchInput" type="search" placeholder="Buscar por título, autor o ISBN" aria-label="Buscar libros"><button class="button" type="submit">Buscar</button></form></section>
@@ -113,22 +113,25 @@ async function openBook(id){
     const r=await fetch(API+'/api/v1/libros/'+encodeURIComponent(id)+'/');if(!r.ok)throw 0;
     const b=await r.json();
     const byLibrary={};
-    (b.ejemplares||[]).forEach(e=>{const l=byLibrary[e.biblioteca_nombre]||(byLibrary[e.biblioteca_nombre]={free:0});if(e.disponible)l.free++});
-    const rows=Object.entries(byLibrary).map(([name,l])=>`<div class="availability-row"><span>${esc(name)}</span><span class="status ${l.free?'good':'bad'}">${l.free?l.free+(l.free===1?' disponible':' disponibles'):'No disponible'}</span></div>`).join('')||empty('Sin ejemplares registrados.');
-    const free=Object.values(byLibrary).reduce((n,l)=>n+l.free,0);
+    (b.ejemplares||[]).forEach(e=>{const l=byLibrary[e.biblioteca]||(byLibrary[e.biblioteca]={id:e.biblioteca,name:e.biblioteca_nombre,free:0});if(e.disponible)l.free++});
+    const rows=Object.values(byLibrary).map(l=>`<div class="availability-row"><span>${esc(l.name)}</span><span class="status ${l.free?'good':'bad'}">${l.free?l.free+(l.free===1?' disponible':' disponibles'):'No disponible'}</span></div>`).join('')||empty('Sin ejemplares registrados.');
+    const libraries=Object.values(byLibrary).filter(l=>l.free>0);
+    const free=libraries.reduce((n,l)=>n+l.free,0);
     const edition=[b.edicion,b.anio_edicion].filter(Boolean).join(' · ');
     const tags=(b.categorias||[]).map(c=>`<span class="tag">${esc(c.nombre)}</span>`).join('');
     const cover=b.portada_url?`<img src="${esc(b.portada_url)}" alt="Portada de ${esc(b.titulo)}">`:'📘';
     const authors=authorsOf(b);
-    $('bookDetail').innerHTML=`<div class="detail-layout"><aside><div class="cover">${cover}</div><section class="panel availability"><h2>Disponibilidad por biblioteca</h2>${rows}</section></aside><section><span class="status ${free?'good':'bad'}">${free?'Disponible · '+free+(free===1?' ejemplar':' ejemplares'):'No disponible'}</span><h1 class="page-heading" style="margin-top:12px">${esc(b.titulo)}</h1><div class="book-meta">${authors?`<span><strong>Autor:</strong> ${esc(authors)}</span>`:''}${b.editorial?`<span><strong>Editorial:</strong> ${esc(b.editorial.nombre)}</span>`:''}${edition?`<span><strong>Edición:</strong> ${esc(edition)}</span>`:''}</div>${b.isbn?`<p class="isbn">ISBN: ${esc(b.isbn)}</p>`:''}<div class="tags">${tags}</div><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-tab="desc">Descripción</button><button class="tab" role="tab" aria-selected="false" data-tab="tech">Ficha técnica</button></div><div id="tab-desc" class="tab-panel active" role="tabpanel">${esc(b.resumen)||'Sin descripción.'}</div><div id="tab-tech" class="tab-panel" role="tabpanel">ISBN: ${esc(b.isbn||'—')}<br>Editorial: ${esc(b.editorial?b.editorial.nombre:'—')}<br>Ejemplares totales: ${b.ejemplares_totales??(b.ejemplares||[]).length}</div>${free?`<button class="button primary-action" type="button" data-request="${esc(b.id)}">Solicitar préstamo</button><p class="note">${session&&session.access?'Continuarás en tu panel para elegir la fecha de devolución.':'La solicitud requiere iniciar sesión con tu cuenta institucional.'}</p>`:''}</section></div>`;
+    $('bookDetail').innerHTML=`<div class="detail-layout"><aside><div class="cover">${cover}</div><section class="panel availability"><h2>Disponibilidad por biblioteca</h2>${rows}</section></aside><section><span class="status ${free?'good':'bad'}">${free?'Disponible · '+free+(free===1?' ejemplar':' ejemplares'):'No disponible'}</span><h1 class="page-heading" style="margin-top:12px">${esc(b.titulo)}</h1><div class="book-meta">${authors?`<span><strong>Autor:</strong> ${esc(authors)}</span>`:''}${b.editorial?`<span><strong>Editorial:</strong> ${esc(b.editorial.nombre)}</span>`:''}${edition?`<span><strong>Edición:</strong> ${esc(edition)}</span>`:''}</div>${b.isbn?`<p class="isbn">ISBN: ${esc(b.isbn)}</p>`:''}<div class="tags">${tags}</div><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-tab="desc">Descripción</button><button class="tab" role="tab" aria-selected="false" data-tab="tech">Ficha técnica</button></div><div id="tab-desc" class="tab-panel active" role="tabpanel">${esc(b.resumen)||'Sin descripción.'}</div><div id="tab-tech" class="tab-panel" role="tabpanel">ISBN: ${esc(b.isbn||'—')}<br>Editorial: ${esc(b.editorial?b.editorial.nombre:'—')}<br>Ejemplares totales: ${b.ejemplares_totales??(b.ejemplares||[]).length}</div>${free?`<label class="profile-field" style="display:block;margin-top:16px"><span>Biblioteca para la solicitud</span><select class="select" data-library required style="margin-top:7px"><option value="">Selecciona una biblioteca</option>${libraries.map(l=>`<option value="${esc(l.id)}">${esc(l.name)} (${l.free} disponibles)</option>`).join('')}</select></label><button class="button primary-action" type="button" data-request="${esc(b.id)}" disabled>Solicitar préstamo</button><p class="note">La solicitud se enviará a la biblioteca seleccionada.</p>`:''}</section></div>`;
   }catch{$('bookDetail').innerHTML=empty('No se pudo cargar la ficha del libro.')}
 }
-function requestLoan(id){
+function requestLoan(id,libraryId){
+  if(!libraryId){note('Selecciona una biblioteca para continuar.');return}
   if(session&&session.access){
     if(isStaff(session)){note('Las cuentas de personal no solicitan préstamos en línea.');return}
-    location.href='panel-usuario.html?libro='+encodeURIComponent(id);return;
+    location.href='panel-usuario.html?libro='+encodeURIComponent(id)+'&biblioteca='+encodeURIComponent(libraryId);return;
   }
   sessionStorage.setItem('uho_pending_book',id);
+  sessionStorage.setItem('uho_pending_library',libraryId);
   location.href='../../login.html';
 }
 $('bookList').addEventListener('click',e=>{const t=e.target.closest('[data-detail]');if(t)openBook(t.dataset.detail)});
@@ -140,8 +143,9 @@ $('bookDetail').addEventListener('click',e=>{
     document.querySelectorAll('#bookDetail .tab-panel').forEach(p=>p.classList.remove('active'));
     tab.setAttribute('aria-selected','true');$('tab-'+tab.dataset.tab).classList.add('active');return;
   }
-  const btn=e.target.closest('[data-request]');if(btn)requestLoan(btn.dataset.request);
+  const btn=e.target.closest('[data-request]');if(btn){const library=$('bookDetail').querySelector('[data-library]').value;btn.disabled=!library;requestLoan(btn.dataset.request,library)}
 });
+$('bookDetail').addEventListener('change',e=>{if(e.target.matches('[data-library]'))$('bookDetail').querySelector('[data-request]').disabled=!e.target.value});
 
 loadFilterOptions();loadBooks();
 </script>

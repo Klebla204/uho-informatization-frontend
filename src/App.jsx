@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchBook, fetchBooks, fetchCategories, fetchLibraries } from './services/catalog';
+import logoUho from './assets/uho-logo.png';
 
 function authorsLabel(authors = []) {
   return authors.map((author) => `${author.nombre} ${author.apellidos}`.trim()).join(', ') || 'Autor no especificado';
@@ -27,7 +28,15 @@ function BookCard({ book, onOpen }) {
 }
 
 function BookDetail({ book, onClose, onRequest }) {
+  const [libraryId, setLibraryId] = useState('');
   if (!book) return null;
+  const availableLibraries = (book.ejemplares || []).reduce((items, copy) => {
+    if (copy.estado !== 'DISPONIBLE') return items;
+    const existing = items.find((item) => item.id === copy.biblioteca);
+    if (existing) existing.count += 1;
+    else items.push({ id: copy.biblioteca, name: copy.biblioteca_nombre, count: 1 });
+    return items;
+  }, []);
   return (
     <div className="dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section className="book-dialog" role="dialog" aria-modal="true" aria-labelledby="detail-title">
@@ -59,10 +68,17 @@ function BookDetail({ book, onClose, onRequest }) {
             <div className="tag-row">{(book.categorias || []).map((category) => <span className="tag" key={category.id}>{category.nombre}</span>)}</div>
             <h3 className="description-heading">Descripción</h3>
             <p className="book-description">{book.resumen || 'No hay descripción disponible para este título.'}</p>
-            <button className="request-button" type="button" disabled={!book.ejemplares_disponibles} onClick={onRequest}>
+            <label className="library-choice" style={{ display: 'grid', gap: 6, marginTop: 16, color: 'var(--muted)', fontSize: 12, fontWeight: 700 }}>
+              Biblioteca para la solicitud
+              <select value={libraryId} onChange={(event) => setLibraryId(event.target.value)} required disabled={!availableLibraries.length} style={{ minHeight: 42, padding: '8px 10px', border: '1px solid var(--line)', borderRadius: 4, background: '#fff', color: 'var(--ink)' }}>
+                <option value="">Selecciona una biblioteca</option>
+                {availableLibraries.map((item) => <option key={item.id} value={item.id}>{item.name} ({item.count} disponibles)</option>)}
+              </select>
+            </label>
+            <button className="request-button" type="button" disabled={!book.ejemplares_disponibles || !libraryId} onClick={() => onRequest(libraryId)}>
               {book.ejemplares_disponibles ? 'Solicitar préstamo' : 'No disponible'}
             </button>
-            <p className="login-note">La solicitud de préstamo requiere autenticación institucional.</p>
+            <p className="login-note">La solicitud se enviará a la biblioteca seleccionada.</p>
           </div>
         </div>
       </section>
@@ -84,7 +100,6 @@ export default function App() {
   const [selectedBook, setSelectedBook] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [toast, setToast] = useState('');
-  const [showInstitutionalNotice, setShowInstitutionalNotice] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -129,10 +144,26 @@ export default function App() {
     }
   }
 
+  function requestBook(libraryId) {
+    const bookId = selectedBook?.id;
+    if (!bookId || !libraryId) return;
+    const auth = JSON.parse(sessionStorage.getItem('uho_auth') || 'null');
+    if (auth?.access) {
+      if (['BIBLIOTECARIO', 'ADMINISTRADOR', 'SUPER_ADMIN'].includes(auth.tipo_usuario) || auth.is_staff) {
+        setToast('Las cuentas de personal no solicitan préstamos en línea.');
+        return;
+      }
+    }
+    sessionStorage.setItem('uho_pending_book', bookId);
+    sessionStorage.setItem('uho_pending_library', libraryId);
+    const target = `/pages/panel-usuario.html?libro=${encodeURIComponent(bookId)}&biblioteca=${encodeURIComponent(libraryId)}`;
+    window.location.href = auth?.access ? target : '/login.html';
+  }
+
   return (
     <div className="catalog-app">
       <header className="site-header">
-        <a className="brand" href="#catalogo" aria-label="BiblioUHO inicio"><span className="brand-mark">UHO</span><span>Biblio<strong>UHO</strong></span></a>
+        <a className="brand" href="#catalogo" aria-label="BiblioUHO inicio"><img className="brand-logo" src={logoUho} alt="Universidad de Holguín" /><span>Biblio<strong>UHO</strong></span></a>
         <span className="public-label"><i /> Catálogo público</span>
       </header>
       <main id="catalogo">
@@ -166,8 +197,7 @@ export default function App() {
         </section>
       </main>
       <footer className="site-footer"><span>BiblioUHO</span><span>Catálogo público · Universidad de Holguín</span></footer>
-      {selectedBook && <BookDetail book={selectedBook} onClose={() => setSelectedBook(null)} onRequest={() => setShowInstitutionalNotice(true)} />}
-      {showInstitutionalNotice && <div className="dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setShowInstitutionalNotice(false); }}><section className="notice-dialog" role="dialog" aria-modal="true" aria-labelledby="institutional-title"><button className="icon-close" type="button" onClick={() => setShowInstitutionalNotice(false)} aria-label="Cerrar aviso">×</button><p className="section-kicker">SOLICITUD DE PRÉSTAMO</p><h2 id="institutional-title">Autenticación institucional requerida</h2><p>El catálogo es público. Para solicitar este libro será necesario iniciar sesión mediante el servicio de autenticación de la Universidad, cuya configuración está pendiente.</p><button className="request-button" type="button" onClick={() => setShowInstitutionalNotice(false)}>Entendido</button></section></div>}
+      {selectedBook && <BookDetail key={selectedBook.id} book={selectedBook} onClose={() => setSelectedBook(null)} onRequest={requestBook} />}
       {detailLoading && <div className="loading-indicator" role="status">Cargando ficha…</div>}
       {toast && <div className="toast-message" role="status">{toast}</div>}
     </div>

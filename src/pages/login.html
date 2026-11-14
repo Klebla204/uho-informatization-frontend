@@ -6,14 +6,14 @@
 <title>Iniciar sesión | BiblioUHO</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap">
 <style>
-:root{--ink:#1b2735;--muted:#667582;--navy:#102a43;--blue:#245b78;--line:#dce4e7;--green:#28704a;--red:#a9473d}
+:root{--ink:#1b2735;--muted:#667582;--navy:#102a43;--institutional:#152a59;--login-gradient:linear-gradient(125deg,#152a59 0%,#1d416b 58%,#28706f 100%);--blue:#245b78;--line:#dce4e7;--green:#28704a;--red:#a9473d}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;display:flex;flex-direction:column;font-family:'DM Sans',sans-serif;color:var(--ink);background:#f5f7f8;line-height:1.5}
-header{height:64px;display:flex;align-items:center;padding:0 clamp(20px,5vw,76px);background:#fff;border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:center;gap:10px;font-family:Manrope,sans-serif;font-weight:800;font-size:17px;color:var(--navy)}
-.brand strong{color:var(--blue)}
-.brand-mark{display:grid;place-items:center;width:34px;height:34px;background:var(--navy);color:#fff;border-radius:4px;font-size:9px;letter-spacing:.04em}
-main{flex:1;display:grid;place-items:center;padding:32px 16px;background:linear-gradient(112deg,#102a43 0%,#1d4d67 63%,#36746f 100%)}
+header{height:64px;display:flex;align-items:center;padding:0 clamp(20px,5vw,76px);background-color:var(--institutional);background-image:var(--login-gradient);background-size:calc(100% - clamp(20px,5vw,76px) - 115px) 100%;background-position:right center;background-repeat:no-repeat;border-bottom:1px solid var(--institutional)}
+.brand{display:flex;align-items:center;gap:10px;font-family:Manrope,sans-serif;font-weight:800;font-size:17px;color:#fff}
+.brand-logo{display:block;width:115px;height:auto;flex:0 0 auto}
+.brand strong{color:#fff}
+main{flex:1;display:grid;place-items:center;padding:32px 16px;background:var(--login-gradient)}
 .card{width:min(100%,400px);padding:32px 28px;background:#fff;border-radius:8px;box-shadow:0 12px 32px #0e223340}
 .kicker{margin:0;color:var(--blue);font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
 h1{margin:6px 0 4px;font-family:Manrope,sans-serif;font-size:26px;font-weight:800;color:var(--navy)}
@@ -33,25 +33,23 @@ pre{margin:10px 0 0;white-space:pre-wrap;word-break:break-all;font-size:11px;col
 </style>
 </head>
 <body>
-<header><div class="brand"><span class="brand-mark">UHO</span><span>Biblio<strong>UHO</strong></span></div></header>
+<header><div class="brand"><img class="brand-logo" src="../assets/uho-logo.png" alt="Universidad de Holguín"><span>Biblio<strong>UHO</strong></span></div></header>
 <main>
   <form class="card" id="form" autocomplete="on">
     <p class="kicker">Acceso institucional</p>
     <h1>Iniciar sesión</h1>
-    <p class="sub">Usa tu usuario de la universidad o una cuenta local.</p>
+    <p class="sub">Usa tu usuario de la universidad.</p>
     <label for="username">Usuario</label>
     <input id="username" name="username" autocomplete="username" required>
     <label for="password">Contraseña</label>
     <input id="password" name="password" type="password" autocomplete="current-password" required>
     <button type="submit" id="submit">Entrar</button>
     <div class="msg" id="msg" role="status"></div>
-    <div class="api">
-      <label for="api" style="margin-top:0">URL del backend</label>
-      <input id="api" value="http://localhost:8000">
-    </div>
+    
   </form>
 </main>
-<script>
+<script type="module">
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 const form = document.getElementById('form');
 const msg = document.getElementById('msg');
 const btn = document.getElementById('submit');
@@ -62,9 +60,8 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   msg.className = 'msg';
   btn.disabled = true;
-  const base = document.getElementById('api').value.replace(/\/+$/, '');
   try {
-    const res = await fetch(base + '/auth/login/', {
+    const res = await fetch(API_BASE.replace(/\/+$/, '') + '/auth/login/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -83,13 +80,15 @@ form.addEventListener('submit', async (e) => {
     msg.querySelector('b').textContent = name;
     const staff = ['BIBLIOTECARIO', 'ADMINISTRADOR', 'SUPER_ADMIN'].includes(data.tipo_usuario) || data.is_staff;
     const pendingBook = sessionStorage.getItem('uho_pending_book');
+    const pendingLibrary = sessionStorage.getItem('uho_pending_library');
     sessionStorage.removeItem('uho_pending_book');
+    sessionStorage.removeItem('uho_pending_library');
     const superAdmin = data.tipo_usuario === 'SUPER_ADMIN' || (data.roles || []).includes('super_admin');
     const administrator = data.tipo_usuario === 'ADMINISTRADOR';
     window.location.href = superAdmin ? '/pages/super-admin.html'
       : administrator ? '/pages/administrador.html'
       : staff ? '/pages/bibliotecario.html'
-      : pendingBook ? '/pages/panel-usuario.html?libro=' + encodeURIComponent(pendingBook)
+      : pendingBook ? '/pages/panel-usuario.html?libro=' + encodeURIComponent(pendingBook) + (pendingLibrary ? '&biblioteca=' + encodeURIComponent(pendingLibrary) : '')
       : '/pages/panel-usuario.html';
   } catch {
     show('error', 'No se pudo conectar con el backend. Verifica que esté en ejecución y el CORS.');
