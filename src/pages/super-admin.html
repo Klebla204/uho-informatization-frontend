@@ -9,13 +9,17 @@
 @media(max-width:720px){.rbac-layout{grid-template-columns:1fr}.rbac-side{padding:12px}.rbac-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.rbac-content{padding:16px 12px}.admin-embed{height:calc(100vh - 156px);min-height:650px}.user-card{grid-template-columns:1fr}.role-form{grid-template-columns:1fr}.field.full{grid-column:auto}.rbac-table{min-width:640px}}
 .library-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px}.library-card{padding:15px;background:#fff;border:1px solid var(--line);border-radius:6px}.library-card h2{margin:0;color:var(--navy);font-size:15px}.library-card>p{margin:5px 0 12px;color:var(--muted);font-size:11px}.staff-list{display:grid;gap:8px;margin:12px 0}.staff-row{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:11px}.staff-row small{display:block;margin-top:3px;color:var(--muted);font-size:10px}.staff-row button{border:0;background:transparent;color:#a33;font-size:17px;cursor:pointer}.staff-assign{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}.staff-assign .select{min-width:0}.staff-kind{display:flex;gap:12px;margin:10px 0;font-size:11px;color:var(--ink-soft)}
 </style>
+<style>
+.nomenclature-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}.nomenclature-wrap{overflow:auto}.nomenclature-table{width:100%;border-collapse:collapse;font-size:12px}.nomenclature-table th,.nomenclature-table td{padding:10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}.nomenclature-table th{color:var(--muted);font-size:9px;text-transform:uppercase}.nomenclature-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0;padding:14px;background:#fff;border:1px solid var(--line);border-radius:6px}.nomenclature-form .field{display:grid;gap:5px}.nomenclature-form .field label{font-size:10px;font-weight:700;color:var(--ink-soft)}.nomenclature-form-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px}.nomenclature-actions{display:flex;justify-content:flex-end;gap:6px}.status-inactive{color:#8b2c2c;background:#fae8e7}@media(max-width:720px){.nomenclature-form{grid-template-columns:1fr}.nomenclature-form-actions{grid-column:auto}}
+</style>
 </head>
 <body class="page-shell">
-<header class="topbar"><a class="brand" href="catalogo.html"><img class="brand-logo" src="../assets/uho-logo.png" alt="Universidad de Holguín"><span>BiblioUHO</span></a><span class="topbar-title">Administración de roles y permisos</span><button type="button" class="button secondary" id="logout">Cerrar sesión</button></header>
-<div class="rbac-layout"><aside class="rbac-side"><div class="rbac-identity"><span id="adminName"></span><small>Super-Admin · Administración</small></div><nav class="rbac-nav" aria-label="Administración"><button type="button" data-section="roles" aria-current="true">Roles y permisos</button><button type="button" data-section="users">Asignar roles</button><button type="button" data-section="libraries">Panel multibiblioteca</button><button type="button" data-section="catalog">Títulos</button><button type="button" data-section="reports">Reportes</button><button type="button" data-section="audit">Auditoría</button></nav></aside>
+<header class="topbar"><a class="brand" href="catalogo.html"><img class="brand-logo" src="../assets/uho-logo.png" alt="Universidad de Holguín"><span>BiblioUHO</span></a><span class="topbar-title">Administración de roles y permisos</span><button type="button" class="button" id="logout">Cerrar sesión</button></header>
+<div class="rbac-layout"><aside class="rbac-side"><div class="rbac-identity"><span id="adminName"></span><small>Super-Admin · Administración</small></div><nav class="rbac-nav" aria-label="Administración"><button type="button" data-section="roles" aria-current="true">Roles y permisos</button><button type="button" data-section="users">Asignar roles</button><button type="button" data-section="nomenclatures">Facultades y cargos</button><button type="button" data-section="libraries">Panel multibiblioteca</button><button type="button" data-section="catalog">Títulos</button><button type="button" data-section="reports">Reportes</button><button type="button" data-section="audit">Auditoría</button></nav></aside>
 <main class="rbac-content">
 <section id="section-roles" class="rbac-section active"><h1 class="page-heading">Roles y permisos</h1><p class="page-lead">Define el acceso por módulo y acción.</p><div class="toolbar"><input id="roleSearch" class="input" type="search" placeholder="Buscar rol"><button id="newRole" class="button" type="button">＋ Crear rol</button></div><div class="panel" style="overflow:auto"><table class="rbac-table"><thead><tr><th>Rol</th><th>Tipo</th><th>Permisos</th><th>Acciones</th></tr></thead><tbody id="roleRows"></tbody></table><p id="rolesEmpty" class="empty" hidden>No hay roles registrados.</p></div></section>
 <section id="section-users" class="rbac-section"><h1 class="page-heading">Asignar roles</h1><p class="page-lead">Busca usuarios activos por usuario, nombre o correo.</p><div class="toolbar"><input id="userSearch" class="input" type="search" placeholder="Usuario, nombre o correo"></div><div id="userRows" class="panel" style="padding:0 14px"><p class="empty">Los usuarios aparecerán aquí.</p></div></section>
+<section id="section-nomenclatures" class="rbac-section"><h1 class="page-heading">Facultades y cargos</h1><p class="page-lead">Administra facultades, carreras y cargos institucionales.</p><div class="nomenclature-toolbar"><label for="nomenclatureType">Nomenclador</label><select id="nomenclatureType" class="select"><option value="facultades">Facultades</option><option value="carreras">Carreras</option><option value="cargos">Cargos</option></select><button id="newNomenclature" class="button" type="button">＋ Nuevo registro</button></div><form id="nomenclatureForm" class="nomenclature-form" hidden></form><div id="nomenclatureStatus" class="page-lead" role="status"></div><div class="panel nomenclature-wrap"><table class="nomenclature-table"><thead id="nomenclatureHead"></thead><tbody id="nomenclatureRows"></tbody></table><p id="nomenclatureEmpty" class="empty" hidden>No hay registros para mostrar.</p></div></section>
 <section id="section-libraries" class="rbac-section"><h1 class="page-heading">Panel multibiblioteca</h1><p class="page-lead">Asigna bibliotecarios y administradores a cada sede.</p><div id="libraryStatus" class="page-lead" role="status">Cargando sedes…</div><div id="libraryRows" class="library-grid"></div></section>
 <section id="section-catalog" class="rbac-section"><iframe class="admin-embed" title="Gestión de títulos" data-src="administrador.html?embed=1" loading="lazy"></iframe></section>
 <section id="section-reports" class="rbac-section"><iframe class="admin-embed" title="Reportes y estadísticas" data-src="reportes.html?embed=1" loading="lazy"></iframe></section>
@@ -49,6 +53,88 @@ function openRole(role=null){$('roleForm').reset();$('roleId').value=role?.id||'
 async function loadRoles(){const response=await api(BASE+'/roles/');if(!response.ok)throw new Error(await errorText(response));roles=await response.json();renderRoles()}
 async function loadPermissions(){const response=await api(BASE+'/permisos/');if(!response.ok)throw new Error(await errorText(response));permissions=(await response.json()).results}
 async function loadAssignments(){const response=await api(BASE+'/asignaciones/');if(!response.ok)throw new Error(await errorText(response));allAssignments=await response.json()}
+const NOMENCLATURES={
+  facultades:{label:'Facultades',singular:'facultad',endpoint:'facultades',columns:[['nombre','Nombre'],['codigo','Código'],['decano','Decano']],fields:[['nombre','Nombre','text',true],['codigo','Código','text',true],['decano','Decano','text',false]]},
+  carreras:{label:'Carreras',singular:'carrera',endpoint:'carreras',columns:[['nombre','Nombre'],['codigo','Código'],['facultad_nombre','Facultad']],fields:[['nombre','Nombre','text',true],['codigo','Código','text',true],['facultad','Facultad','select',true]]},
+  cargos:{label:'Cargos',singular:'cargo',endpoint:'cargos',columns:[['nombre','Nombre'],['nivel','Nivel']],fields:[['nombre','Nombre','text',true],['nivel','Nivel','text',false]]},
+};
+let nomenclatureRows=[],editingNomenclature=null;
+const nomenclatureEndpoint=()=>`/api/v1/admin/nomencladores/${NOMENCLATURES[$('nomenclatureType').value].endpoint}/`;
+async function readApiList(response){const data=await response.json();return Array.isArray(data)?data:(data.results||[])}
+async function loadNomenclatures(){
+  const config=NOMENCLATURES[$('nomenclatureType').value];
+  $('nomenclatureStatus').textContent=`Cargando ${config.label.toLocaleLowerCase('es')}…`;
+  $('nomenclatureRows').innerHTML='';$('nomenclatureEmpty').hidden=true;$('nomenclatureForm').hidden=true;editingNomenclature=null;
+  try{
+    const response=await api(nomenclatureEndpoint());
+    if(!response.ok)throw new Error(await errorText(response));
+    nomenclatureRows=await readApiList(response);
+    $('nomenclatureStatus').textContent=`${nomenclatureRows.length} registro(s). Los elementos desactivados se conservan para proteger los datos relacionados.`;
+    renderNomenclatures();
+  }catch(error){$('nomenclatureStatus').textContent=error.message||'No se pudieron cargar los registros.'}
+}
+function renderNomenclatures(){
+  const config=NOMENCLATURES[$('nomenclatureType').value];
+  $('nomenclatureHead').innerHTML=`<tr>${config.columns.map(([,label])=>`<th>${label}</th>`).join('')}<th>Estado</th><th>Acciones</th></tr>`;
+  $('nomenclatureRows').innerHTML=nomenclatureRows.map(item=>`<tr>${config.columns.map(([key])=>`<td>${esc(item[key]||'—')}</td>`).join('')}<td><span class="status ${item.activa?'good':'status-inactive'}">${item.activa?'Activo':'Inactivo'}</span></td><td><div class="nomenclature-actions"><button class="button secondary" type="button" data-edit-nomenclature="${esc(item.id)}">Editar</button>${item.activa?`<button class="button danger" type="button" data-disable-nomenclature="${esc(item.id)}">Desactivar</button>`:`<button class="button secondary" type="button" data-enable-nomenclature="${esc(item.id)}">Reactivar</button>`}</div></td></tr>`).join('');
+  $('nomenclatureEmpty').hidden=nomenclatureRows.length>0;
+}
+async function openNomenclatureForm(item=null){
+  const type=$('nomenclatureType').value,config=NOMENCLATURES[type],form=$('nomenclatureForm');
+  editingNomenclature=item;
+  let facultyOptions='';
+  if(type==='carreras'){
+    const response=await api('/api/v1/admin/nomencladores/facultades/');
+    if(!response.ok){notify(await errorText(response));return}
+    const faculties=await readApiList(response);
+    facultyOptions=faculties.filter(faculty=>faculty.activa||String(faculty.id)===String(item?.facultad)).map(faculty=>`<option value="${esc(faculty.id)}"${String(faculty.id)===String(item?.facultad)?' selected':''}>${esc(faculty.nombre)}${faculty.activa?'':' (inactiva)'}</option>`).join('');
+  }
+  const fields=config.fields.map(([name,label,kind,required])=>{
+    const value=item?.[name]??'';
+    const input=kind==='select'?`<select class="select" name="${name}" ${required?'required':''}><option value="">Selecciona facultad…</option>${facultyOptions}</select>`:`<input class="input" name="${name}" value="${esc(value)}" ${required?'required':''} maxlength="${name==='codigo'?50:200}">`;
+    return `<div class="field"><label for="nomenclature-${name}">${label}${required?' *':''}</label>${input}</div>`;
+  }).join('');
+  form.innerHTML=`${fields}<label class="field"><span>Estado</span><span><input type="checkbox" name="activa" ${item?.activa===false?'':'checked'}> Activo</span></label><div class="nomenclature-form-actions"><button class="button secondary" type="button" data-cancel-nomenclature>Cancelar</button><button class="button" type="submit">${item?'Guardar cambios':'Crear registro'}</button></div>`;
+  form.hidden=false;
+  form.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+async function saveNomenclature(event){
+  event.preventDefault();
+  const form=event.currentTarget,config=NOMENCLATURES[$('nomenclatureType').value],payload={activa:form.elements.activa.checked};
+  for(const [name] of config.fields)payload[name]=form.elements[name].value.trim();
+  const id=editingNomenclature?.id;
+  const button=form.querySelector('button[type="submit"]');button.disabled=true;
+  try{
+    const response=await api(`${nomenclatureEndpoint()}${id?`${encodeURIComponent(id)}/`:''}`,{method:id?'PATCH':'POST',body:JSON.stringify(payload)});
+    if(!response.ok)throw new Error(await errorText(response));
+    notify(id?'Registro actualizado.':'Registro creado.');
+    await loadNomenclatures();
+  }catch(error){notify(error.message||'No se pudo guardar el registro.')}finally{button.disabled=false}
+}
+async function setNomenclatureActive(item,active){
+  const config=NOMENCLATURES[$('nomenclatureType').value];
+  const response=active
+    ?await api(`${nomenclatureEndpoint()}${encodeURIComponent(item.id)}/`,{method:'PATCH',body:JSON.stringify({activa:true})})
+    :await api(`${nomenclatureEndpoint()}${encodeURIComponent(item.id)}/`,{method:'DELETE'});
+  if(!response.ok)throw new Error(await errorText(response));
+  notify(active?`${config.singular} reactivada.`:`${config.singular} desactivada.`);
+  await loadNomenclatures();
+}
+$('nomenclatureType').addEventListener('change',loadNomenclatures);
+$('newNomenclature').addEventListener('click',()=>openNomenclatureForm());
+$('nomenclatureForm').addEventListener('submit',saveNomenclature);
+$('nomenclatureRows').addEventListener('click',async event=>{
+  const edit=event.target.closest('[data-edit-nomenclature]');
+  const disable=event.target.closest('[data-disable-nomenclature]');
+  const enable=event.target.closest('[data-enable-nomenclature]');
+  const item=nomenclatureRows.find(row=>String(row.id)===(edit?.dataset.editNomenclature||disable?.dataset.disableNomenclature||enable?.dataset.enableNomenclature));
+  try{
+    if(edit){await openNomenclatureForm(item);return}
+    if(disable){if(!confirm(`¿Desactivar «${item.nombre}»? El registro se conservará para mantener sus relaciones.`))return;await setNomenclatureActive(item,false)}
+    if(enable)await setNomenclatureActive(item,true);
+  }catch(error){notify(error.message||'No se pudo cambiar el estado del registro.')}
+});
+$('nomenclatureForm').addEventListener('click',event=>{if(event.target.closest('[data-cancel-nomenclature]')){$('nomenclatureForm').hidden=true;editingNomenclature=null}});
 async function loadLibraryPanel(){
   $('libraryStatus').textContent='Cargando sedes y personal…';
   try{
@@ -159,7 +245,7 @@ libraryRows.addEventListener('click',async event=>{
     await loadLibraryPanel();
   }catch(error){notify(error.message||'No se pudo actualizar la asignación.')}finally{if(assign)assign.disabled=false}
 });
-document.querySelectorAll('[data-section]').forEach(button=>button.addEventListener('click',async()=>{document.querySelectorAll('[data-section]').forEach(item=>{item.removeAttribute('aria-current');document.getElementById(`section-${item.dataset.section}`).classList.remove('active')});button.setAttribute('aria-current','true');const section=document.getElementById(`section-${button.dataset.section}`);section.classList.add('active');if(button.dataset.section==='users'){await Promise.all([loadAssignments(),searchUsers()])}if(button.dataset.section==='libraries')await loadLibraryPanel();const frame=section.querySelector('iframe[data-src]');if(frame){frame.src=frame.dataset.src;frame.removeAttribute('data-src')}}));
+document.querySelectorAll('[data-section]').forEach(button=>button.addEventListener('click',async()=>{document.querySelectorAll('[data-section]').forEach(item=>{item.removeAttribute('aria-current');document.getElementById(`section-${item.dataset.section}`).classList.remove('active')});button.setAttribute('aria-current','true');const section=document.getElementById(`section-${button.dataset.section}`);section.classList.add('active');if(button.dataset.section==='users'){await Promise.all([loadAssignments(),searchUsers()])}if(button.dataset.section==='nomenclatures')await loadNomenclatures();if(button.dataset.section==='libraries')await loadLibraryPanel();const frame=section.querySelector('iframe[data-src]');if(frame){frame.src=frame.dataset.src;frame.removeAttribute('data-src')}}));
 (async()=>{if(!session?.access||!isSuperAdmin)return;try{await Promise.all([loadRoles(),loadPermissions()])}catch(error){notify(error.message||'No se pudo cargar RBAC.')}})();
 </script>
 </body>

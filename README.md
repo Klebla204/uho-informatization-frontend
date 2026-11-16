@@ -99,7 +99,8 @@ Estado contrastado con el documento [Sistema Integrado de Gestión de Préstamos
 - [x] Ficha con autores, editorial, edición, resumen y disponibilidad de ejemplares (RF-02).
 - [x] Administración de libros, ejemplares, autores, categorías, editoriales y bibliotecas (RF-10).
 - [x] Descarga de plantilla Excel, carga y visualización del resultado de importación (RF-11).
-- [ ] Parcial: completar interfaces CRUD para facultades, carreras, cargos, departamentos y demás nomencladores académicos/laborales (RF-12).
+- [x] CRUD administrativo de facultades, carreras y cargos desde el panel Super-Admin, con edición, desactivación lógica y reactivación (RF-12).
+- [ ] Parcial: completar CRUD de departamentos y formalizar tipos de curso/usuario como nomencladores administrables; actualmente tipo de curso es texto de perfil y los tipos de usuario son opciones del sistema (RF-12).
 - [ ] Pendiente: gestión de portadas subidas al sistema y ubicación física detallada desde la interfaz, además de la URL actual (RF-02, RF-10).
 
 ### E4-E5: Préstamos y atención bibliotecaria
