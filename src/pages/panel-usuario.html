@@ -52,7 +52,8 @@ const list=async p=>{const r=await api(p);if(!r.ok)throw new Error('HTTP '+r.sta
 function loanRow(l){
   const [label,cls]=l.vencido?['Vencido','bad']:(ST[l.estado]||[l.estado,'']);
   const when=l.estado==='LISTO'&&l.fecha_recogida_limite?'Recoger antes del '+fmt(l.fecha_recogida_limite):l.estado==='DEVUELTO'?'Devuelto el '+fmt(l.fecha_devolucion_real):l.estado==='ACTIVO'||l.vencido?(l.vencido?'Venció el ':'Devolver antes del ')+fmt(l.fecha_devolucion_pactada)+(l.estado==='ACTIVO'&&l.dias_restantes!==null&&l.dias_restantes<=3?` (${l.dias_restantes===0?'hoy':'en '+l.dias_restantes+' día(s)'})`:''):'La fecha de devolución se definirá al recoger el ejemplar.';
-  return `<div class="loan-row"><span class="loan-icon">📘</span><div class="loan-info"><strong>${esc(l.libro_titulo)}</strong><small>${esc(l.biblioteca_nombre)} · Ejemplar ${esc(l.codigo_ejemplar)} · Solicitado el ${fmt(l.fecha_solicitud)} · ${when}</small></div><span class="status ${cls}">${label}</span></div>`;
+  const renewal=l.estado==='ACTIVO'?(l.renovacion_pendiente?'<span class="status warn">Renovación pendiente</span>':`<button class="button secondary" type="button" data-renew="${esc(l.id)}">Solicitar renovación</button>`):'';
+  return `<div class="loan-row"><span class="loan-icon">📘</span><div class="loan-info"><strong>${esc(l.libro_titulo)}</strong><small>${esc(l.biblioteca_nombre)} · Ejemplar ${esc(l.codigo_ejemplar)} · Solicitado el ${fmt(l.fecha_solicitud)} · ${when}</small>${renewal}</div><span class="status ${cls}">${label}</span></div>`;
 }
 const empty=t=>`<p class="page-lead" style="padding:14px 0">${t}</p>`;
 
@@ -68,6 +69,13 @@ async function loadLoans(){
     const others=loans.filter(l=>!['APROBADO','LISTO','ACTIVO','VENCIDO'].includes(l.estado));
     $('loanList').innerHTML=current.map(loanRow).join('')||empty('No tienes préstamos en curso.');
     $('requestList').innerHTML=others.map(loanRow).join('')||empty('No hay solicitudes.');
+    $('loanList').querySelectorAll('[data-renew]').forEach(button=>button.addEventListener('click',async()=>{
+      button.disabled=true;
+      const response=await api(`/api/v1/prestamos/${button.dataset.renew}/renovar/`,{method:'POST',body:JSON.stringify({})});
+      const data=await response.json().catch(()=>({}));
+      if(response.ok){note('Solicitud de renovación enviada al bibliotecario.');await loadLoans()}
+      else{note(data.detail||'No se pudo solicitar la renovación.');button.disabled=false}
+    }));
   }catch{$('loanList').innerHTML=empty('No se pudieron cargar tus préstamos.')}
 }
 
@@ -154,7 +162,10 @@ async function openBook(id, requestedLibrary=''){
     const edition=[b.edicion,b.anio_edicion].filter(Boolean).join(' \u00b7 ');
     const tags=(b.categorias||[]).map(c=>`<span class=\"tag\">${esc(c.nombre)}</span>`).join('');
     const cover=b.portada_url?`<img src=\"${esc(b.portada_url)}\" alt=\"Portada de ${esc(b.titulo)}\">`:'\ud83d\udcd8';
-    const action=free>0?`<div class="loan-request-controls"><label class="profile-field" style="display:block;margin-top:16px"><span>Biblioteca para la solicitud</span><select class="select" data-library required style="margin-top:7px"><option value="">Selecciona una biblioteca</option>${libraries.map(l=>`<option value="${esc(l.id)}"${l.id===requestedLibrary?' selected':''}>${esc(l.name)} (${l.free} disponibles)</option>`).join('')}</select></label><button class="button" style="width:100%" type="button" data-request="${esc(b.id)}">Solicitar préstamo</button></div>`:'';
+    const waitlistEntries=free===0&&(b.ejemplares_totales||0)>0?await list('/api/v1/prestamos/lista-espera/?libro='+encodeURIComponent(b.id)).catch(()=>[]):[];
+    const activeWait=waitlistEntries.find(entry=>entry.estado==='ACTIVA');
+    const waitlistAction=free===0&&(b.ejemplares_totales||0)>0?(activeWait?'<p class="note">Ya estás anotado en la lista de espera. Te avisaremos cuando haya un ejemplar disponible.</p>':`<button class="button" style="width:100%;margin-top:16px" type="button" data-waitlist="${esc(b.id)}">Anotarme en lista de espera</button><p class="note">Te notificaremos cuando se devuelva un ejemplar.</p>`):'';
+    const action=free>0?`<div class="loan-request-controls"><label class="profile-field" style="display:block;margin-top:16px"><span>Biblioteca para la solicitud</span><select class="select" data-library required style="margin-top:7px"><option value="">Selecciona una biblioteca</option>${libraries.map(l=>`<option value="${esc(l.id)}"${l.id===requestedLibrary?' selected':''}>${esc(l.name)} (${l.free} disponibles)</option>`).join('')}</select></label><button class="button" style="width:100%" type="button" data-request="${esc(b.id)}">Solicitar préstamo</button></div>`:waitlistAction;
     $('bookDetail').innerHTML=`<div class=\"detail-layout\"><aside><div class=\"cover\">${cover}</div><section class=\"panel availability\"><h2>Disponibilidad por biblioteca</h2>${rows}</section></aside><section><span class=\"status ${free?'good':'bad'}\">${free?'Disponible \u00b7 '+free+(free===1?' ejemplar':' ejemplares'):'No disponible'}</span><h1 class=\"page-heading\" style=\"margin-top:12px\">${esc(b.titulo)}</h1><div class=\"book-meta\">${authors?`<span><strong>Autor:</strong> ${esc(authors)}</span>`:''}${b.editorial?`<span><strong>Editorial:</strong> ${esc(b.editorial.nombre)}</span>`:''}${edition?`<span><strong>Edici\u00f3n:</strong> ${esc(edition)}</span>`:''}</div>${b.isbn?`<p class=\"isbn\">ISBN: ${esc(b.isbn)}</p>`:''}<div class=\"tags\">${tags}</div><div class=\"tabs\" role=\"tablist\"><button class=\"tab\" role=\"tab\" aria-selected=\"true\" data-tab=\"desc\">Descripci\u00f3n</button><button class=\"tab\" role=\"tab\" aria-selected=\"false\" data-tab=\"tech\">Ficha t\u00e9cnica</button></div><div id=\"tab-desc\" class=\"tab-panel active\" role=\"tabpanel\">${esc(b.resumen)||'Sin descripci\u00f3n.'}</div><div id=\"tab-tech\" class=\"tab-panel\" role=\"tabpanel\">ISBN: ${esc(b.isbn||'\u2014')}<br>Editorial: ${esc(b.editorial?b.editorial.nombre:'\u2014')}<br>Ejemplares totales: ${b.ejemplares_totales??(b.ejemplares||[]).length}</div>${action}</section></div>`;
   }catch{$('bookDetail').innerHTML=empty('No se pudo cargar la ficha del libro.')}
 }
@@ -167,15 +178,27 @@ $('bookDetail').addEventListener('click',async e=>{
     document.querySelectorAll('#bookDetail .tab-panel').forEach(p=>p.classList.remove('active'));
     tab.setAttribute('aria-selected','true');$('tab-'+tab.dataset.tab).classList.add('active');return;
   }
+  const waitlistButton=e.target.closest('[data-waitlist]');
+  if(waitlistButton){await joinWaitlist(waitlistButton.dataset.waitlist);return}
   const btn=e.target.closest('[data-request]');if(!btn)return;
   const controls=btn.closest('.loan-request-controls');
   const library=controls.querySelector('[data-library]').value;
   if(!library){note('Selecciona una biblioteca.');return}
+  const libraryName=controls.querySelector('[data-library] option:checked').textContent.replace(/\s*\(\d+ disponibles\)$/,'');
+  if(!confirm(`¿Confirmas la solicitud de préstamo en ${libraryName}?`))return;
   btn.disabled=true;
   const r=await api('/api/v1/prestamos/solicitar/',{method:'POST',body:JSON.stringify({libro:btn.dataset.request,biblioteca:library})});
   if(r.ok){note('Solicitud enviada. Queda pendiente de aprobaci\u00f3n.');await Promise.all([loadLoans(),loadBooks(),openBook(btn.dataset.request)])}
   else{const d=await r.json().catch(()=>({}));note(d.detail||'No se pudo enviar la solicitud.');btn.disabled=false}
 });
+
+async function joinWaitlist(bookId){
+  const button=$('bookDetail').querySelector('[data-waitlist]');if(button)button.disabled=true;
+  const response=await api('/api/v1/prestamos/lista-espera/',{method:'POST',body:JSON.stringify({libro:bookId})});
+  const data=await response.json().catch(()=>({}));
+  if(response.ok){note(response.status===201?'Te anotaste en la lista de espera.':'Ya estabas anotado en la lista de espera.');await Promise.all([loadNotifications(),openBook(bookId)])}
+  else{note(data.detail||'No se pudo completar la inscripción.');if(button)button.disabled=false}
+}
 
 const field=(label,value)=>`<div class="profile-field"><label>${label}</label><span>${esc(value||'—')}</span></div>`;
 let profile=null;
@@ -243,7 +266,7 @@ async function loadNotifications(announce){
     const items=await list('/api/v1/prestamos/notificaciones/');
     const unread=items.filter(n=>!n.leida).length;
     $('notifCount').hidden=unread===0;$('notifCount').textContent=unread;
-    $('notifList').innerHTML=items.map(n=>`<div class="loan-row" style="${n.leida?'':'background:#f1f6fb'}"><span class="loan-icon">${n.tipo==='VENCIDO'?'⚠️':'🕔'}</span><div class="loan-info"><strong>${n.tipo==='VENCIDO'?'Préstamo vencido':'Próximo vencimiento'}</strong><small>${esc(n.mensaje)} · ${fmt(n.fecha_envio)}</small></div>${n.leida?'':`<button type="button" class="button secondary" data-read="${esc(n.id)}">Marcar leída</button>`}</div>`).join('')||empty('No tienes notificaciones.');
+    $('notifList').innerHTML=items.map(n=>{const renewal=n.tipo.startsWith('RENOVACION_');const title=n.tipo==='DISPONIBILIDAD'?'Libro disponible':n.tipo==='RENOVACION_APROBADA'?'Renovación aprobada':n.tipo==='RENOVACION_RECHAZADA'?'Renovación rechazada':n.tipo==='VENCIDO'?'Préstamo vencido':n.tipo==='POR_VENCER'?'Próximo vencimiento':'Notificación';const icon=n.tipo==='DISPONIBILIDAD'?'📗':renewal?'↻':n.tipo==='VENCIDO'?'⚠️':'🕔';return `<div class="loan-row" style="${n.leida?'':'background:#f1f6fb'}"><span class="loan-icon">${icon}</span><div class="loan-info"><strong>${title}</strong><small>${esc(n.mensaje)} · ${fmt(n.fecha_envio)}</small></div>${n.leida?'':`<button type="button" class="button secondary" data-read="${esc(n.id)}">Marcar leída</button>`}</div>`}).join('')||empty('No tienes notificaciones.');
     if(announce&&unread)note(`Tienes ${unread} notificación(es) sin leer.`);
   }catch{$('notifList').innerHTML=empty('No se pudieron cargar las notificaciones.')}
 }

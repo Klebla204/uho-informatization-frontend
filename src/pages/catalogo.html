@@ -121,7 +121,8 @@ async function openBook(id){
     const tags=(b.categorias||[]).map(c=>`<span class="tag">${esc(c.nombre)}</span>`).join('');
     const cover=b.portada_url?`<img src="${esc(b.portada_url)}" alt="Portada de ${esc(b.titulo)}">`:'📘';
     const authors=authorsOf(b);
-    $('bookDetail').innerHTML=`<div class="detail-layout"><aside><div class="cover">${cover}</div><section class="panel availability"><h2>Disponibilidad por biblioteca</h2>${rows}</section></aside><section><span class="status ${free?'good':'bad'}">${free?'Disponible · '+free+(free===1?' ejemplar':' ejemplares'):'No disponible'}</span><h1 class="page-heading" style="margin-top:12px">${esc(b.titulo)}</h1><div class="book-meta">${authors?`<span><strong>Autor:</strong> ${esc(authors)}</span>`:''}${b.editorial?`<span><strong>Editorial:</strong> ${esc(b.editorial.nombre)}</span>`:''}${edition?`<span><strong>Edición:</strong> ${esc(edition)}</span>`:''}</div>${b.isbn?`<p class="isbn">ISBN: ${esc(b.isbn)}</p>`:''}<div class="tags">${tags}</div><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-tab="desc">Descripción</button><button class="tab" role="tab" aria-selected="false" data-tab="tech">Ficha técnica</button></div><div id="tab-desc" class="tab-panel active" role="tabpanel">${esc(b.resumen)||'Sin descripción.'}</div><div id="tab-tech" class="tab-panel" role="tabpanel">ISBN: ${esc(b.isbn||'—')}<br>Editorial: ${esc(b.editorial?b.editorial.nombre:'—')}<br>Ejemplares totales: ${b.ejemplares_totales??(b.ejemplares||[]).length}</div>${free?`<label class="profile-field" style="display:block;margin-top:16px"><span>Biblioteca para la solicitud</span><select class="select" data-library required style="margin-top:7px"><option value="">Selecciona una biblioteca</option>${libraries.map(l=>`<option value="${esc(l.id)}">${esc(l.name)} (${l.free} disponibles)</option>`).join('')}</select></label><button class="button primary-action" type="button" data-request="${esc(b.id)}" disabled>Solicitar préstamo</button><p class="note">La solicitud se enviará a la biblioteca seleccionada.</p>`:''}</section></div>`;
+    const waitlistAction=!free&&(b.ejemplares_totales||0)>0?`<button class="button primary-action" type="button" data-waitlist="${esc(b.id)}">Anotarme en lista de espera</button><p class="note">Te notificaremos cuando se devuelva un ejemplar.</p>`:'';
+    $('bookDetail').innerHTML=`<div class="detail-layout"><aside><div class="cover">${cover}</div><section class="panel availability"><h2>Disponibilidad por biblioteca</h2>${rows}</section></aside><section><span class="status ${free?'good':'bad'}">${free?'Disponible · '+free+(free===1?' ejemplar':' ejemplares'):'No disponible'}</span><h1 class="page-heading" style="margin-top:12px">${esc(b.titulo)}</h1><div class="book-meta">${authors?`<span><strong>Autor:</strong> ${esc(authors)}</span>`:''}${b.editorial?`<span><strong>Editorial:</strong> ${esc(b.editorial.nombre)}</span>`:''}${edition?`<span><strong>Edición:</strong> ${esc(edition)}</span>`:''}</div>${b.isbn?`<p class="isbn">ISBN: ${esc(b.isbn)}</p>`:''}<div class="tags">${tags}</div><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" data-tab="desc">Descripción</button><button class="tab" role="tab" aria-selected="false" data-tab="tech">Ficha técnica</button></div><div id="tab-desc" class="tab-panel active" role="tabpanel">${esc(b.resumen)||'Sin descripción.'}</div><div id="tab-tech" class="tab-panel" role="tabpanel">ISBN: ${esc(b.isbn||'—')}<br>Editorial: ${esc(b.editorial?b.editorial.nombre:'—')}<br>Ejemplares totales: ${b.ejemplares_totales??(b.ejemplares||[]).length}</div>${free?`<label class="profile-field" style="display:block;margin-top:16px"><span>Biblioteca para la solicitud</span><select class="select" data-library required style="margin-top:7px"><option value="">Selecciona una biblioteca</option>${libraries.map(l=>`<option value="${esc(l.id)}">${esc(l.name)} (${l.free} disponibles)</option>`).join('')}</select></label><button class="button primary-action" type="button" data-request="${esc(b.id)}" disabled>Solicitar préstamo</button><p class="note">La solicitud se enviará a la biblioteca seleccionada.</p>`:waitlistAction}</section></div>`;
   }catch{$('bookDetail').innerHTML=empty('No se pudo cargar la ficha del libro.')}
 }
 function requestLoan(id,libraryId){
@@ -143,9 +144,23 @@ $('bookDetail').addEventListener('click',e=>{
     document.querySelectorAll('#bookDetail .tab-panel').forEach(p=>p.classList.remove('active'));
     tab.setAttribute('aria-selected','true');$('tab-'+tab.dataset.tab).classList.add('active');return;
   }
+  const waitlistButton=e.target.closest('[data-waitlist]');if(waitlistButton){joinWaitlist(waitlistButton.dataset.waitlist);return}
   const btn=e.target.closest('[data-request]');if(btn){const library=$('bookDetail').querySelector('[data-library]').value;btn.disabled=!library;requestLoan(btn.dataset.request,library)}
 });
 $('bookDetail').addEventListener('change',e=>{if(e.target.matches('[data-library]'))$('bookDetail').querySelector('[data-request]').disabled=!e.target.value});
+
+async function joinWaitlist(bookId){
+  if(!session?.access){sessionStorage.setItem('uho_pending_waitlist_book',bookId);location.href='../../login.html';return}
+  if(isStaff(session)){note('Las cuentas de personal no se anotan en lista de espera.');return}
+  const button=$('bookDetail').querySelector('[data-waitlist]');if(button)button.disabled=true;
+  try{
+    const response=await fetch(API+'/api/v1/prestamos/lista-espera/',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.access},body:JSON.stringify({libro:bookId})});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(data.detail||'No se pudo completar la inscripción.');
+    note(response.status===201?'Te anotaste en la lista de espera.':'Ya estabas anotado en la lista de espera.');
+    if(button)button.textContent='Ya estás en la lista de espera';
+  }catch(error){note(error.message);if(button)button.disabled=false}
+}
 
 loadFilterOptions();loadBooks();
 </script>

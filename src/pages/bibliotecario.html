@@ -5,11 +5,13 @@
 .qr-backdrop{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:18px;background:#0b1c2dcc}.qr-dialog{width:min(100%,520px);padding:20px;background:#fff;border-radius:8px;box-shadow:0 18px 60px #0b1c2d55}.qr-dialog-header{display:flex;justify-content:space-between;align-items:center;gap:12px}.qr-dialog h2{margin:0;font-size:17px}.qr-dialog p{color:var(--muted);font-size:12px}.qr-reader{min-height:280px;overflow:hidden;border:1px solid var(--line);border-radius:5px}.qr-status{min-height:20px;color:var(--muted);font-size:12px}.verified-user{margin-top:6px;color:var(--green);font-size:11px;font-weight:600}
 </style><style>.qr-backdrop[hidden]{display:none}</style></head>
 <body class="page-shell"><header class="topbar"><a class="brand" href="#gestion"><img class="brand-logo" src="../assets/uho-logo.png" alt="Universidad de Holguín"><span>BiblioUHO</span></a><span class="topbar-title">Gestión de biblioteca · Personal autorizado</span><button type="button" class="button" id="logout">Cerrar sesión</button></header>
-<div class="staff-layout"><aside class="staff-side"><div class="staff-name"><span id="staffName"></span><small id="staffRole"></small></div><nav class="staff-nav" aria-label="Funciones de biblioteca"><button type="button" data-staff="requests" aria-current="true">Solicitudes pendientes <span class="staff-count" id="pendingCount" hidden>0</span></button><button type="button" data-staff="counter">Préstamo presencial</button><button type="button" data-staff="active">Préstamos activos</button><button type="button" data-staff="due">Vencimientos <span class="staff-count" id="dueCount" hidden>0</span></button><button type="button" data-staff="catalog">Gestión del catálogo</button></nav></aside><main class="staff-content" id="gestion">
+<div class="staff-layout"><aside class="staff-side"><div class="staff-name"><span id="staffName"></span><small id="staffRole"></small></div><nav class="staff-nav" aria-label="Funciones de biblioteca"><button type="button" data-staff="requests" aria-current="true">Solicitudes pendientes <span class="staff-count" id="pendingCount" hidden>0</span></button><button type="button" data-staff="renewals">Renovaciones <span class="staff-count" id="renewalCount" hidden>0</span></button><button type="button" data-staff="counter">Préstamo presencial</button><button type="button" data-staff="active">Préstamos activos</button><button type="button" data-staff="due">Vencimientos <span class="staff-count" id="dueCount" hidden>0</span></button><button type="button" data-staff="sanctions">Sanciones</button><button type="button" data-staff="catalog">Gestión del catálogo</button></nav></aside><main class="staff-content" id="gestion">
 <section id="staff-requests" class="staff-section active"><h1 class="page-heading">Solicitudes pendientes</h1><p class="page-lead">Revisa y gestiona las solicitudes recibidas.</p><div id="requestList"></div><p id="emptyRequests" class="empty-state panel" hidden>No quedan solicitudes pendientes.</p></section>
+<section id="staff-renewals" class="staff-section"><h1 class="page-heading">Renovaciones</h1><p class="page-lead">Aprueba o rechaza solicitudes de renovación de préstamos activos.</p><div id="renewalRows"></div><p id="emptyRenewals" class="empty-state panel" hidden>No hay renovaciones pendientes.</p></section>
 <section id="staff-counter" class="staff-section"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px"><div><h1 class="page-heading">Nuevo préstamo presencial</h1><p class="page-lead">Registra la entrega de un ejemplar en el mostrador.</p></div><button id="openQrScanner" class="button secondary" type="button" aria-label="Escanear código QR del carnet">▦ Escanear código QR</button></div><form id="counterForm" class="panel form-grid"><div class="form-group"><label for="userSearch">Usuario (escanea el QR del carnet o escribe CI / usuario)</label><input id="userSearch" class="input" required autocomplete="off" autofocus placeholder="Escanea el QR o escribe CI, usuario o nombre"><div id="qrUserResult" class="verified-user" role="status" hidden></div></div><div class="form-group"><label for="bookSelect">Libro</label><input id="bookSelect" class="input" list="bookOptions" required autocomplete="off" placeholder="Escribe el título, autor o ISBN"><datalist id="bookOptions"></datalist></div><div class="form-group"><label for="librarySelect">Biblioteca</label><select id="librarySelect" class="select" required></select></div><div class="form-group"><label for="dueDate">Fecha de devolución</label><input id="dueDate" class="input" type="date" required></div><div class="form-group full"><label for="notes">Observaciones</label><input id="notes" class="input" placeholder="Opcional"></div><div class="form-group full"><button class="button" type="submit">Registrar préstamo</button></div></form></section>
 <section id="staff-due" class="staff-section"><h1 class="page-heading">Vencimientos</h1><p class="page-lead">Préstamos que vencen en los próximos 3 días y préstamos ya vencidos.</p><h2>Vencidos</h2><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Acción</th></tr></thead><tbody id="overdueRows"></tbody></table></div><h2 style="margin-top:20px">Próximos a vencer</h2><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Acción</th></tr></thead><tbody id="upcomingRows"></tbody></table></div></section>
 <section id="staff-active" class="staff-section"><h1 class="page-heading">Préstamos activos</h1><p class="page-lead">Consulta préstamos y fechas de devolución.</p><div class="filter-row"><input id="loanFilter" class="input" type="search" placeholder="Buscar usuario, título o ejemplar"></div><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Libro</th><th>Usuario</th><th>Ejemplar</th><th>Devolución</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="activeRows"></tbody></table></div></section>
+<section id="staff-sanctions" class="staff-section"><h1 class="page-heading">Sanciones y desbloqueos</h1><p class="page-lead">Registra el bloqueo temporal de nuevas solicitudes por préstamos vencidos y desbloquea usuarios cuando regularicen su situación.</p><h2>Préstamos vencidos</h2><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Usuario</th><th>Libro</th><th>Vencimiento</th><th>Días vencido</th><th>Acción</th></tr></thead><tbody id="sanctionOverdueRows"></tbody></table></div><h2 style="margin-top:20px">Usuarios sancionados</h2><div class="panel" style="overflow-x:auto"><table class="loan-table"><thead><tr><th>Usuario</th><th>Libro</th><th>Sancionado</th><th>Motivo</th><th>Acción</th></tr></thead><tbody id="sanctionedRows"></tbody></table></div></section>
 <section id="staff-catalog" class="staff-section"><iframe title="Gestión del catálogo" src="administrador.html?embed=1" style="display:block;width:100%;height:calc(100vh - 120px);min-height:720px;border:0;background:transparent"></iframe></section>
 </main></div><div id="toast" class="toast" role="status" hidden></div>
 <div id="qrBackdrop" class="qr-backdrop" hidden><section class="qr-dialog" role="dialog" aria-modal="true" aria-labelledby="qrTitle"><header class="qr-dialog-header"><h2 id="qrTitle">Escanear carnet</h2><button id="closeQrScanner" class="button secondary" type="button" aria-label="Cerrar escáner">Cerrar</button></header><p>Centra el código QR del carnet frente a la cámara.</p><div id="qrReader" class="qr-reader"></div><p id="qrStatus" class="qr-status" role="status">Solicitando acceso a la cámara…</p></section></div>
@@ -58,6 +60,13 @@ async function loadPending(){
     $('pendingCount').textContent=loans.length;$('pendingCount').hidden=loans.length===0;$('emptyRequests').hidden=loans.length>0;
   }catch{notify('No se pudieron cargar las solicitudes.')}
 }
+async function loadRenewals(){
+  try{
+    const renewals=await list('/api/v1/prestamos/renovaciones/');
+    $('renewalRows').innerHTML=renewals.map(renewal=>`<article class="request-card panel"><div class="request-icon">↻</div><div class="request-main"><h2>${esc(renewal.libro_titulo)}</h2><p>${esc(renewal.usuario_nombre)} · ${esc(renewal.biblioteca_nombre)} · Ejemplar ${esc(renewal.codigo_ejemplar)}</p><p>Fecha de devolución actual: ${fmt(renewal.fecha_devolucion_actual)} · Solicitada: ${fmt(renewal.fecha_solicitud)}</p><div class="request-actions"><label class="due-date-field">Nueva fecha de devolución <input class="input" type="date" data-renewal-date min="${new Date(Date.now()+86400000).toISOString().slice(0,10)}" required></label><button class="button" type="button" data-renewal-id="${esc(renewal.id)}" data-renewal-action="approve">Aprobar</button><button class="button danger" type="button" data-renewal-id="${esc(renewal.id)}" data-renewal-action="reject">Rechazar</button></div></div></article>`).join('');
+    $('renewalCount').textContent=renewals.length;$('renewalCount').hidden=renewals.length===0;$('emptyRenewals').hidden=renewals.length>0;
+  }catch{notify('No se pudieron cargar las renovaciones.')}
+}
 async function loadDue(){
   try{
     const r=await api('/api/v1/prestamos/vencimientos/');if(!r.ok)throw 0;
@@ -74,7 +83,15 @@ async function loadActive(){
     $('activeRows').innerHTML=loans.map(l=>{const [label,cls]=l.vencido?['Vencido','bad']:(ST[l.estado]||[l.estado,'']);const next=NEXT[l.estado];return `<tr><td>${esc(l.libro_titulo)}</td><td>${esc(l.usuario_nombre)}</td><td>${esc(l.codigo_ejemplar)}</td><td>${fmt(l.fecha_devolucion_pactada)}</td><td><span class="status ${cls}">${label}</span></td><td>${next?`<button class="button secondary" type="button" data-id="${esc(l.id)}" data-action="${next[0]}">${next[1]}</button>`:''}</td></tr>`}).join('')||'<tr><td colspan="6">No hay préstamos en curso.</td></tr>';
   }catch{notify('No se pudieron cargar los préstamos.')}
 }
-const refresh=()=>Promise.all([loadPending(),loadActive(),loadDue()]);
+async function loadSanctions(){
+  try{
+    const response=await api('/api/v1/prestamos/sanciones/');if(!response.ok)throw new Error(await errorOf(response,'No se pudieron cargar las sanciones.'));
+    const data=await response.json();
+    $('sanctionOverdueRows').innerHTML=data.vencidos.map(item=>`<tr><td>${esc(item.usuario_nombre)} · ${esc(item.usuario_uid)}</td><td>${esc(item.libro_titulo)}</td><td>${fmt(item.fecha_devolucion_pactada)}</td><td>${item.dias_vencido}</td><td><button class="button danger" type="button" data-sanction-loan="${esc(item.id)}">Sancionar</button></td></tr>`).join('')||'<tr><td colspan="5">No hay préstamos vencidos pendientes de sanción.</td></tr>';
+    $('sanctionedRows').innerHTML=data.sancionados.map(item=>`<tr><td>${esc(item.usuario_nombre)} · ${esc(item.usuario_uid)}</td><td>${esc(item.libro_titulo)}</td><td>${fmt(item.fecha_sancion)}</td><td>${esc(item.motivo||'Préstamo vencido')}</td><td><button class="button" type="button" data-unblock-sanction="${esc(item.sancion_id)}">Desbloquear</button></td></tr>`).join('')||'<tr><td colspan="5">No hay usuarios sancionados.</td></tr>';
+  }catch(error){notify(error.message||'No se pudieron cargar las sanciones.')}
+}
+const refresh=()=>Promise.all([loadPending(),loadRenewals(),loadActive(),loadDue(),loadSanctions()]);
 
 $('requestList').addEventListener('click',async e=>{
   const btn=e.target.closest('[data-action]');if(!btn)return;
@@ -91,6 +108,31 @@ $('requestList').addEventListener('click',async e=>{
   const r=await post(`/api/v1/prestamos/${btn.dataset.id}/${action}/`,body);
   if(r.ok){notify({aprobar:'Solicitud aprobada.',rechazar:'Solicitud rechazada.',listo:'Marcada como lista para recoger.',recoger:'Entrega registrada. El préstamo pasa a activos.'}[action]);await refresh()}
   else{notify(await errorOf(r,'No se pudo completar la acción.'));btn.disabled=false}
+});
+$('renewalRows').addEventListener('click',async e=>{
+  const button=e.target.closest('[data-renewal-action]');if(!button)return;
+  let body={};
+  if(button.dataset.renewalAction==='approve'){
+    const date=button.closest('.request-card').querySelector('[data-renewal-date]').value;
+    if(!date){notify('Indica la nueva fecha de devolución.');return}
+    body={fecha_devolucion_pactada:new Date(date+'T23:59:00').toISOString()};
+  }else body={motivo:'No se cumplen las condiciones para renovar.'};
+  button.disabled=true;
+  const response=await post(`/api/v1/prestamos/renovaciones/${button.dataset.renewalId}/resolver/`,body);
+  if(response.ok){notify(button.dataset.renewalAction==='approve'?'Renovación aprobada.':'Renovación rechazada.');await refresh()}
+  else{notify(await errorOf(response,'No se pudo resolver la renovación.'));button.disabled=false}
+});
+$('sanctionOverdueRows').addEventListener('click',async event=>{
+  const button=event.target.closest('[data-sanction-loan]');if(!button)return;
+  const reason=prompt('Motivo de la sanción (opcional):')||'';button.disabled=true;
+  const response=await post('/api/v1/prestamos/sanciones/',{prestamo:button.dataset.sanctionLoan,motivo:reason});
+  if(response.ok){notify('Usuario sancionado.');await loadSanctions()}else{notify(await errorOf(response,'No se pudo sancionar al usuario.'));button.disabled=false}
+});
+$('sanctionedRows').addEventListener('click',async event=>{
+  const button=event.target.closest('[data-unblock-sanction]');if(!button)return;
+  if(!confirm('¿Desbloquear este usuario para que pueda solicitar préstamos?'))return;button.disabled=true;
+  const response=await post(`/api/v1/prestamos/sanciones/${button.dataset.unblockSanction}/desbloquear/`,{});
+  if(response.ok){notify('Usuario desbloqueado.');await loadSanctions()}else{notify(await errorOf(response,'No se pudo desbloquear al usuario.'));button.disabled=false}
 });
 ['activeRows','overdueRows','upcomingRows'].forEach(id=>$(id).addEventListener('click',async e=>{
   const btn=e.target.closest('[data-action]');if(!btn)return;
